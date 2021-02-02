@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 
@@ -11,7 +11,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.sqlite3'
 
 @app.route('/')
 def home():
-    return 'home.html'
+    return render_template('home.html')
 @app.route('/signedIn')
 def home2():
     return 'home2.html'
