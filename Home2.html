@@ -1,0 +1,61 @@
+<html>
+<head>
+	<style>
+		* {
+  box-sizing: border-box;
+}
+
+body {
+
+    font-family: Palatino, URW;
+    padding: 30px;
+    background: #d5f4e6;
+}
+		.header {
+    font-family: Palatino, URW;
+    padding: 30px;
+    text-align: center;
+    background:#80ced6	;
+    	}
+    	.topnav {
+    overflow: hidden;
+    background-color: #618685;
+}
+
+.topnav a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.topnav a:hover {
+    background-color: #ddd;
+    color: darkgreen;
+}
+.card {
+    background-color: white;
+    padding: 20px;
+    margin-top: 20px;
+}
+	</style>
+</head>
+<body>
+	<div class="header">
+  <b><font size="10">CEN 4010</font></b>
+  <h2> Book Store Project</h2>
+  <p><h3>Check out our top 10 best sellers</h3></p>
+</div>
+
+	<div class="topnav">
+  <a href="/signup">Search</a>
+  <a href="/wishList">WishList</a>
+  <a href="{{ loginUrl }}" style="float:right">{{User}}</a>
+</div>
+<div class ="card">
+	<h3>Top sellers</h3>
+</div>
+</body>
+</html>
