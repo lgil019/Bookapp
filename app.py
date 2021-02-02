@@ -6,12 +6,12 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.secret_key = 'monkey'
 #images = Images(app)
-app.config ['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.sqlite3'
 
 
 @app.route('/')
 def home():
-    return 'Templates/home.html'
+    return 'home.html'
 @app.route('/signedIn')
 def home2():
     return 'home2.html'
