@@ -1,28 +1,26 @@
-from flask import Flask, render_template
-from datetime import datetime
+from flask import Flask, render_template, url_for, flash, redirect
+from forms import RegistrationForm, LoginForm
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 
 app = Flask(__name__)
 app.secret_key = 'monkey'
-#images = Images(app)
+#Saw this way to set secret key
+#app.config['SECRET_KEY'] = 'monkey'
+
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.sqlite3'
-
-
-@app.route('/')
-def home():
-    return render_template('home.html')
-@app.route('/signedIn')
-def home2():
-    return 'home2.html'
-
 
 db = SQLAlchemy(app)
 class Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(30), nullable=False)
+    username = db.Column(db.String(20), nullable=False, unique=True)
+    email = db.Column(db.String(30), nullable=False, unique=True)
     password = db.Column(db.String(30), nullable=False)
+
+    def __repr__(self):
+        return f"Customer('{self.username}', '{self.email}')"
 
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -34,11 +32,33 @@ class Book(db.Model):
     comments = db.Column(db.String(30), nullable=False, default = 'N/A')
     date_published = db.Column(db.DateTime, nullable=False)
 
+    def __repr__(self):
+        return f"Book('{self.title}', '{self.author}', '{self.genre}', '{self.book_rating}', '{self.publisher}', '{self.date_published}')"
+
 db.create_all()
 
+@app.route('/')
+def home():
+    return render_template('home.html')
 
-def __repr__(self):
-    return 'Blog post ' + str(self.id)
+@app.route('/login', methods=['GET','POST'])
+def login():
+    form = LoginForm()
+    return render_template('login.html', title='Login', form=form)
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        flash(f'Account created for {form.username.data}!', 'success')
+        return redirect(url_for('home'))
+    return render_template('register.html', title='Register', form=form)
+
+
+
+
+#def __repr__(self):
+#    return 'Blog post ' + str(self.id)
 
 
 
