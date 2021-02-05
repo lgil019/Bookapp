@@ -5,9 +5,9 @@ from datetime import datetime
 
 
 app = Flask(__name__)
-app.secret_key = 'monkey'
+#app.secret_key = 'monkey'
 #Saw this way to set secret key
-#app.config['SECRET_KEY'] = 'monkey'
+app.config['SECRET_KEY'] = 'monkey'
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.sqlite3'
@@ -39,7 +39,7 @@ db.create_all()
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('home.html', title="Home")
 
 @app.route('/login', methods=['GET','POST'])
 def login():
@@ -51,14 +51,10 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         flash(f'Account created for {form.username.data}!', 'success')
+        print("flash detected")
         return redirect(url_for('home'))
+        
     return render_template('register.html', title='Register', form=form)
-
-
-
-
-#def __repr__(self):
-#    return 'Blog post ' + str(self.id)
 
 
 
