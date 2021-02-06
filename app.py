@@ -44,6 +44,9 @@ def home():
 @app.route('/login', methods=['GET','POST'])
 def login():
     form = LoginForm()
+    if form.validate_on_submit():
+        flash(f'{form.email.data} Successfully Logged In!', 'success')
+        return redirect(url_for('home'))
     return render_template('login.html', title='Login', form=form)
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -51,9 +54,7 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         flash(f'Account created for {form.username.data}!', 'success')
-        print("flash detected")
-        return redirect(url_for('home'))
-        
+        return redirect(url_for('home')) 
     return render_template('register.html', title='Register', form=form)
 
 
