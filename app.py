@@ -38,6 +38,8 @@ db = SQLAlchemy(app)
 
 @app.route('/orders', methods=['GET'])
 
+return render_template('orders.html', title="Orders")
+
 class Orders(db.Model)
 
     order_number = db.Column(db.integer, primary_key = True)
@@ -49,6 +51,9 @@ class Orders(db.Model)
     total = db.Column(db.integer, nullable = False, default = 0)
 
 @app.route('/shoppingcart', methods=['GET'])
+
+return render_template('shoppingcart.html', title="Shopping Cart")
+
 
 class ShoppingCart(db.Model)
 
