@@ -18,7 +18,6 @@ class User(db.Model, UserMixin):
     state = db.Column(db.String(2))
     zip = db.Column(db.String(5))
     
-
     def __repr__(self):
         return f"User('{self.username}', '{self.email}')"
 

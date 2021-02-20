@@ -69,3 +69,11 @@ def account():
         form.state.data = current_user.state
         form.zip.data = current_user.zip
     return render_template('account.html', title='Account', form=form)
+
+@app.route("/shoppingcart", methods=['GET', 'POST'])
+def shoppingcart():
+    return render_template('shoppingcart.html', title='Shopping Cart')
+
+@app.route("/orders", methods=['GET'])
+def orders():
+    return render_template('orders.html', title='Orders')
