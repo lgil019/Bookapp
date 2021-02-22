@@ -1,17 +1,13 @@
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
+from flask_restful import Api, Resource
 from datetime import datetime
 
 
-app = Flask{__name__}
+app = Flask(__name__)
+api = Api(app)
 app.secret_key = 'monkey'
 images = Images(app)
-
-class Customer(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(30), nullable=False)
-    password = db.Column(db.String(30), nullable=False)
 
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -26,16 +22,13 @@ class Book(db.Model):
 
 
 
-    def __repr__(self):
-        return 'Blog post ' + str(self.id)
-
 
 @app.route('/book/<int:id>')
 def bookpage(id):
     post = Book.query.get_or_404(id)
     db.session.delete(post)
     db.session.commit()
-    return redirect('/posts')
+    return redirect('/home')
 
 @app.route('/results')
 def search_results(search):
@@ -55,16 +48,17 @@ def search_results(search):
         elif search.data['select'] == 'publisher':
             qry = db_session.query(Book).filter(Book.publisher.contains(search_keyword))
             results = qry.all()
-      else:
-        qry = db_session.query(Book)
-        results = qry.all()
     else:
         qry = db_session.query(Book)
         results = qry.all()
-    if not results:
+
+    else:
+        qry = db_session.query(Book)
+        results = qry.all()
+        if not results:
         flash('No results found!')
         return redirect('/')
-    else:
+        else:
         table =Results(results)
         table.border = True
         return render_template('results.html', table=table)
