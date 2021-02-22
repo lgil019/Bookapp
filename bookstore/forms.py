@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField
 from wtforms.fields.core import IntegerField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from bookstore.models import User
@@ -53,3 +53,12 @@ class UpdateAccountForm(FlaskForm):
             user = User.query.filter_by(email=email.data).first()
             if user:
                 raise ValidationError('That Email is taken.')
+
+
+class SearchForm(FlaskForm):
+    choices = [('Author', 'author'),
+               ('Title', 'title'),
+               ('Genre', 'genre')]
+    select = SelectField('Search by:', choices=choices)
+    search = StringField('Search')
+    submit = SubmitField('Search')
