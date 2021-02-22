@@ -1,0 +1,24 @@
+{% extends 'layout.html'%}
+
+
+{% block content %}
+
+
+<h1>Book Details</h1>
+
+<hr>
+<h2> Create New Blog Post: </h2>
+<form action = '/posts' method = 'POST'>
+    Title: <input type = 'text' name = 'title' id = 'title'>
+    <br>
+    Post: <input type = 'text' name = 'content' id = 'content'>
+    <br>
+    Author: <input type = 'text' name = 'author' id = 'author'>
+    <br>
+    <input type = 'submit' value = 'Post'>
+    <br>
+</form>
+<hr>
+
+
+{% endblock %}

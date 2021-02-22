@@ -1,7 +1,7 @@
 import bcrypt
 from flask import render_template, url_for, flash, redirect, request
 from bookstore import app, db, bcrypt
-from bookstore.forms import RegistrationForm, LoginForm, UpdateAccountForm
+from bookstore.forms import RegistrationForm, LoginForm, UpdateAccountForm, SearchForm
 from bookstore.models import User, Book
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -77,3 +77,43 @@ def shoppingcart():
 @app.route("/orders", methods=['GET'])
 def orders():
     return render_template('orders.html', title='Orders')
+
+@app.route('/book/<int:id>')
+def book(id):
+    post = Book.query.get_or_404(id)
+    db.session.delete(post)
+    db.session.commit()
+    return redirect('/home')
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    form = SearchForm()
+    results = []
+    search_keyword = form.search.data
+    if form.validate_on_submit():
+        results = form.search.data
+        return render_template('search.html', results=results, title='Search', form=form)
+    #if search_keyword:
+    #    if search.data['select'] == 'author':
+    #        qry = db.session.query(Book).filter(Book.author.contains(search_keyword))
+    #        results = [item[0] for item in qry.all()]
+    #    elif search.data['select'] == 'title':
+    #        qry = db.session.query(Book).filter(Book.title.contains(search_keyword))
+    #        results = qry.all()
+    #    elif search.data['select'] == 'genre':
+    #        qry = db.session.query(Book).filter(Book.genre.contains(search_keyword))
+    #        results = qry.all()
+    #    elif search.data['select'] == 'publisher':
+    #        qry = db.session.query(Book).filter(Book.publisher.contains(search_keyword))
+    #        results = qry.all()
+    #else:
+    #    qry = db.session.query(Book)
+    #    results = qry.all()
+    #    if not results:
+    #        flash('No results found!')
+    #        return redirect('/search')
+    #    else:
+    #        table =results
+    #        table.border = True
+        
+    return render_template('search.html', title='Search', form=form)
