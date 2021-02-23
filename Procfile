@@ -1,1 +1,1 @@
-web:gunicorn run:bookstore.app
+web:gunicorn run:app
