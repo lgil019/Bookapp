@@ -89,8 +89,6 @@ def orders():
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     form = SearchForm()
-    #results = []
-    #search_keyword = form.search.data
     books = Book.query.all()
     
     if form.validate_on_submit():
@@ -101,6 +99,6 @@ def search():
     return render_template('search.html', title='Search', books=books, form=form)    
     
 
-@app.route("/browse", methods=['GET'])
+@app.route("/browse", methods=['GET', 'POST'])
 def browse():
     return render_template('browse.html', title='Browse')
