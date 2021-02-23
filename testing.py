@@ -1,10 +1,8 @@
 #from bookstore import db
-from bookstore.models import User
+from bookstore.models import User, Book
 
-myList = User.query.all()
+book = Book.query.all()
+print(book)
 
-
-for row in myList:
-    print(row.username)
-    print(row.email)
-    print(row.password)
+for item in book:
+    print(item)

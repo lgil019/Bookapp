@@ -29,7 +29,8 @@ class Book(db.Model):
     book_rating = db.Column(db.Integer, nullable=False, default = 'N/A')
     publisher = db.Column(db.String(30), nullable=False, default = 'N/A')
     comments = db.Column(db.String(30), nullable=False, default = 'N/A')
-    date_published = db.Column(db.DateTime, nullable=False)
+    date_published = db.Column(db.String)
+    price = db.Column(db.Numeric(8,2), nullable=False)
 
     def __repr__(self):
         return f"Book('{self.title}', '{self.author}', '{self.genre}', '{self.book_rating}', '{self.publisher}', '{self.date_published}')"
