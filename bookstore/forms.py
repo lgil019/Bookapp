@@ -56,9 +56,12 @@ class UpdateAccountForm(FlaskForm):
 
 
 class SearchForm(FlaskForm):
-    choices = [('Author', 'author'),
-               ('Title', 'title'),
-               ('Genre', 'genre')]
-    select = SelectField('Search by:', choices=choices)
-    search = StringField('Search')
+    choices = [ ('id', 'All Books'),
+                ('title', 'Title'),
+                ('author', 'Author'),
+                ('price', 'Price'),
+                ('book_rating', 'Rating'),
+                ('date_published', 'Date Published')]
+    select = SelectField('Sort By:', choices=choices)
+    #search = StringField('Search')
     submit = SubmitField('Search')
