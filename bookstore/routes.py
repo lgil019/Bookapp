@@ -1,7 +1,7 @@
 import bcrypt
 from flask import render_template, url_for, flash, redirect, request
 from bookstore import app, db, bcrypt
-from bookstore.forms import RegistrationForm, LoginForm, UpdateAccountForm
+from bookstore.forms import RegistrationForm, LoginForm, UpdateAccountForm, SearchForm
 from bookstore.models import User, Book
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -71,9 +71,34 @@ def account():
     return render_template('account.html', title='Account', form=form)
 
 @app.route("/shoppingcart", methods=['GET', 'POST'])
+@login_required
 def shoppingcart():
     return render_template('shoppingcart.html', title='Shopping Cart')
 
 @app.route("/orders", methods=['GET'])
 def orders():
     return render_template('orders.html', title='Orders')
+
+#@app.route('/book/<int:id>')
+#def book(id):
+#    post = Book.query.get_or_404(id)
+#    db.session.delete(post)
+#    db.session.commit()
+#    return redirect('/home')
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    form = SearchForm()
+    books = Book.query.all()
+    
+    if form.validate_on_submit():
+        selection = form.select.data
+        books = Book.query.order_by(selection)
+        return render_template('search.html', title='Search', form=form, books=books)
+
+    return render_template('search.html', title='Search', books=books, form=form)    
+    
+
+@app.route("/browse", methods=['GET', 'POST'])
+def browse():
+    return render_template('browse.html', title='Browse')
