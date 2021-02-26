@@ -1,5 +1,7 @@
+from sqlalchemy.orm import relation, relationship
 from datetime import datetime
-from bookstore import db, login_manager
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from bookstore import db, login_manager, app
 from flask_login import UserMixin
 
 
@@ -17,9 +19,25 @@ class User(db.Model, UserMixin):
     city = db.Column(db.String(30))
     state = db.Column(db.String(2))
     zip = db.Column(db.String(5))
+    cartItems = db.relationship('ShoppingCart', backref='customer', lazy=True)
     
+    def get_reset_token(self, expires_sec=3600):
+        s = Serializer(app.config['SECRET_KEY'], expires_sec)
+        return s.dumps({'user_id': self.id}).decode('utf-8')
+
+    @staticmethod
+    def verify_reset_token(token):
+        s = Serializer(app.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
+
     def __repr__(self):
         return f"User('{self.username}', '{self.email}')"
+    
+    
 
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -31,7 +49,15 @@ class Book(db.Model):
     comments = db.Column(db.String(30), nullable=False, default = 'N/A')
     date_published = db.Column(db.String)
     price = db.Column(db.Numeric(8,2), nullable=False)
+    cartItems = db.relationship('ShoppingCart', backref='BookItem', lazy=True)
 
     def __repr__(self):
         return f"Book('{self.title}', '{self.author}', '{self.genre}', '{self.book_rating}', '{self.publisher}', '{self.date_published}')"
 
+
+class ShoppingCart(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    book_id = db.Column(db.Integer, db.ForeignKey('book.id'))
+    quantity = db.Column(db.Integer, nullable = False, default = 0)
+    total = db.Column(db.Integer, nullable = False, default = 0)

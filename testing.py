@@ -5,4 +5,4 @@ book = Book.query.all()
 print(book)
 
 for item in book:
-    print(item)
+    print(item.price)
