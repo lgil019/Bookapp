@@ -1,1 +1,1 @@
-web: gunicorn --chdir bookstore bookstore:app
+web: gunicorn --chdir bookstore run:app
