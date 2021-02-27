@@ -1,1 +1,1 @@
-web: gunicorn --chdir bookstore run:__init__
+web: gunicorn run:app
