@@ -85,12 +85,10 @@ def shoppingcart():
 def orders():
     return render_template('orders.html', title='Orders')
 
-#@app.route('/book/<int:id>')
-#def book(id):
-#    post = Book.query.get_or_404(id)
-#    db.session.delete(post)
-#    db.session.commit()
-#    return redirect('/home')
+@app.route('/book/<int:id>')
+def book(id):
+    post = Book.query.get_or_404(id)
+    return render_template('book.html', title = Book.title, post=post)
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():

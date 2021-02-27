@@ -7,17 +7,11 @@
 <h1>Book Details</h1>
 
 <hr>
-<h2> Create New Blog Post: </h2>
-<form action = '/posts' method = 'POST'>
-    Title: <input type = 'text' name = 'title' id = 'title'>
-    <br>
-    Post: <input type = 'text' name = 'content' id = 'content'>
-    <br>
-    Author: <input type = 'text' name = 'author' id = 'author'>
-    <br>
-    <input type = 'submit' value = 'Post'>
-    <br>
-</form>
+<h2> {{post.title}}: </h2>
+<h3>{{post.author}}</h3>
+<h4>{{post.price}}</h4>
+<h5>{{post.book_rating}}</h5>
+
 <hr>
 
 
