@@ -48,6 +48,7 @@ class Book(db.Model):
     publisher = db.Column(db.String(30), nullable=False, default = 'N/A')
     comments = db.Column(db.String(30), nullable=False, default = 'N/A')
     date_published = db.Column(db.String)
+    image_file = db.Column(db.String(60), nullable=False)
     price = db.Column(db.Numeric(8,2), nullable=False)
     cartItems = db.relationship('ShoppingCart', backref='BookItem', lazy=True)
 

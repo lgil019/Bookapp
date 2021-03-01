@@ -1,12 +1,11 @@
 {% extends "layout.html" %}
 
-{% block content %}
-<div class="container">
+{% block content%}
 
     {%for book in books%}
     <div class="content-section">
         <div class="product-image">
-
+          <img src="{{ image_file }}"
         </div>
         <div class="product-info">
             <h5>{{ book.title }}</h5>
@@ -22,5 +21,4 @@
     </div>
     {%endfor%}
 
-</div>
-{% endblock content %}
+{% endblock content%}
