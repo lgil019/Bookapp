@@ -90,23 +90,27 @@ def book(id):
     post = Book.query.get_or_404(id)
     return render_template('book.html', title = Book.title, post=post)
 
-@app.route('/search', methods=['GET', 'POST'])
+@app.route('/author/<string:author>')
+def book_author(author):
+    page = request.args.get('page', 1, type=int)
+    author = Book.query.filter_by(author=author).first_or_404()
+    books = Book.query.filter_by(author=author).paginate(page=page,per_page=5)
+    return render_template('author_books.html', title=Book.author, author=author, books=books)
+
+
+@app.route('/browse', methods=['GET', 'POST'])
 def search():
+    page = request.args.get('page', 1, type=int)
     form = SearchForm()
-    books = Book.query.all()
+    books = Book.query.paginate(page=page,per_page=5)
     
     if form.validate_on_submit():
         selection = form.select.data
-        books = Book.query.order_by(selection)
-        return render_template('search.html', title='Search', form=form, books=books)
+        books = Book.query.order_by(selection).paginate(page=page,per_page=5)
+        return render_template('browse.html', title='Browse', form=form, books=books)
 
-    return render_template('search.html', title='Search', books=books, form=form)    
+    return render_template('browse.html', title='Browse', books=books, form=form)    
     
-
-@app.route("/browse", methods=['GET', 'POST'])
-def browse():
-    return render_template('browse.html', title='Browse')
-
 
 def send_reset_email(user):
     token = user.get_reset_token()
