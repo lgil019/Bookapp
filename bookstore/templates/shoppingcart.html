@@ -1,6 +1,34 @@
 {% extends "layout.html" %}
 
-
 {% block content %}
-<h1> Shopping Cart goes here </h1>
+
+<h1>Shopping Cart</h1>
+
+<div class="container">
+
+    <div id="tableItems">
+        <div>
+            
+            {% for key , product in session['Shoppingcart'].items() %}
+
+            <hr id="seperator">
+                
+                <h5>Title: {{ product.title }}</h5>
+                <h6>Author: {{ product.author }}</h6>
+                <h6>Unit Price: ${{ product.price }}</h6>
+                <h6>Total Price: ${{ subtotal }}</h6>
+                <h7>Quantity: </h7>
+                <input type="number" name="quantity" id="" value={{product.quantity}} min="1" max="99">
+                <button type="submit" class="btn btn-outline-info">Update</button> <br>
+                In stock<br>
+
+            {% endfor %}
+        </div>
+        <hr id="seperator">
+        <div id="total">
+            <span id="subtotal">Subtotal</span> : ${{totalPrice}}
+            <br>
+            <br>
+        </div>
+
 {% endblock content %}
