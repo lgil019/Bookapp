@@ -38,7 +38,7 @@
                     <div class="navbar-nav">
                         {% if current_user.is_authenticated %}
                             <a class="nav-item nav-link" href="/orders">Orders</a>
-                            <a class="nav-item nav-link" href="/shoppingcart">Shopping Cart</a>
+                            <a class="nav-item nav-link" href="/shoppingcart">Shopping Cart({{session['Shoppingcart']|length}})</a>
                             <a class="nav-item nav-link" href="/account">Account</a>
                             <a class="nav-item nav-link" href="/logout">Logout</a>
 

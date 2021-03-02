@@ -1,11 +1,16 @@
 import bcrypt
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, redirect, request, session
 from bookstore import app, db, bcrypt, mail
 from bookstore.forms import RegistrationForm, LoginForm, UpdateAccountForm, SearchForm, RequestResetForm, ResetPasswordForm
 from bookstore.models import User, Book
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
+
+def merge(cart, item):
+    if isinstance(cart, dict) and isinstance(item, dict):
+        return dict(list(cart.items()) + list(item.items()))
+    return False
 
 @app.route("/")
 def home():
@@ -74,6 +79,24 @@ def account():
         form.zip.data = current_user.zip
     return render_template('account.html', title='Account', form=form)
 
+@app.route("/addcart", methods=['POST'])
+@login_required
+def addcart():
+    try:
+        book_id = request.form.get('book_id')
+        quantity = request.form.get('quantity')
+        book = Book.query.filter_by(id=book_id).first()
+        if book_id and quantity and request.method == "POST":
+            item = {book_id:{'title':book.title, 'author': book.author, 'price': float(book.price), 'quantity':quantity}}
+            if 'Shoppingcart' in session:
+                print(session['Shoppingcart'])
+                session['Shoppingcart'] = merge(session['Shoppingcart'], item)
+            else:
+                session['Shoppingcart'] = item
+                return redirect(request.referrer)
+    except Exception as e:
+        print(e)
+    return redirect(request.referrer)
 
 @app.route("/shoppingcart", methods=['GET', 'POST'])
 @login_required
