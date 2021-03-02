@@ -115,22 +115,22 @@ def orders():
 #    db.session.commit()
 #    return redirect('/home')
 
-@app.route('/search', methods=['GET', 'POST'])
-def search():
+@app.route('/browse', methods=['GET', 'POST'])
+def browse():
     form = SearchForm()
     books = Book.query.all()
     
     if form.validate_on_submit():
         selection = form.select.data
         books = Book.query.order_by(selection)
-        return render_template('search.html', title='Search', form=form, books=books)
+        return render_template('browse.html', title='Browse', form=form, books=books)
 
-    return render_template('search.html', title='Search', books=books, form=form)    
+    return render_template('browse.html', title='Browse', books=books, form=form)    
     
 
-@app.route("/browse", methods=['GET', 'POST'])
-def browse():
-    return render_template('browse.html', title='Browse')
+#@app.route("/browse", methods=['GET', 'POST'])
+#def browse():
+#    return render_template('browse.html', title='Browse')
 
 
 def send_reset_email(user):
