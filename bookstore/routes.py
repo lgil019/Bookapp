@@ -87,8 +87,9 @@ def orders():
 
 @app.route('/book/<int:id>')
 def book(id):
+    image_file = url_for('static', filename='book_covers/' + Book.image_file)
     post = Book.query.get_or_404(id)
-    return render_template('book.html', title = Book.title, post=post)
+    return render_template('book.html', title = Book.title, post=post, image_file=image_file)
 
 @app.route('/author/<string:author>')
 def book_author(author):
