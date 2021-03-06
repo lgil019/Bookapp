@@ -119,19 +119,15 @@ def orders():
 def browse():
     form = SearchForm()
     books = Book.query.all()
-    
+    path = url_for('static', filename='book_covers/')
+
     if form.validate_on_submit():
         selection = form.select.data
         books = Book.query.order_by(selection)
-        return render_template('browse.html', title='Browse', form=form, books=books)
+        return render_template('browse.html', title='Browse', form=form, books=books, path=path)
 
-    return render_template('browse.html', title='Browse', books=books, form=form)    
+    return render_template('browse.html', title='Browse', books=books, form=form, path=path)    
     
-
-#@app.route("/browse", methods=['GET', 'POST'])
-#def browse():
-#    return render_template('browse.html', title='Browse')
-
 
 def send_reset_email(user):
     token = user.get_reset_token()
