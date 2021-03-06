@@ -136,6 +136,8 @@ def send_reset_email(user):
     msg.body = f'''To resset your password, visit the following link:
 {url_for('reset_token', token=token, _external=True)}
 
+This Link will expire in 60 minutes.
+
 If you did not make this request, ignore this email.
 '''
     mail.send(msg)
@@ -152,6 +154,16 @@ def reset_request():
         return redirect(url_for('login'))
     return render_template('reset_request.html', title='Reset Password', form=form)
 
+@app.route('/change_password', methods=['GET', 'POST'])
+def change_password():
+    form = RequestResetForm()
+    form.email.data = current_user.email
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        send_reset_email(user)
+        flash('Reset Password Instructions Sent. Please check spam folder if you did not see it arrive.', 'info')
+        return redirect(url_for('account'))
+    return render_template('change_password.html', title='Change Password', form=form)
 
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_token(token):
