@@ -14,7 +14,8 @@ def merge(cart, item):
 
 @app.route("/")
 def home():
-    return render_template('home.html', title="Home")
+    path = url_for('static', filename='book_covers/')
+    return render_template('home.html', title="Home", path=path)
 
 
 @app.route("/register", methods=['GET', 'POST'])
