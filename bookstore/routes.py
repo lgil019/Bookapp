@@ -101,10 +101,89 @@ def addcart():
     return redirect(request.referrer)
 
 
+@app.route("/movetosaved/<int:id>", methods=['GET','POST'])
+@login_required
+def movetosaved(id):
+    try:
+        quantity = 0
+        for key, item in session['Shoppingcart'].items():
+            if int(key) == id:
+                quantity = item['quantity']
+
+        book = Book.query.filter_by(id=id).first()
+        book_id = book.id
+        print(quantity)
+        if quantity:
+            item = {book_id:{'title':book.title, 'author': book.author, 'price': float(book.price), 'quantity':quantity}}
+            if 'Savebook' in session:
+                session['Savebook'] = merge(session['Savebook'], item)
+            else:
+                session['Savebook'] = item
+                #return redirect(request.referrer)
+    except Exception as e:
+        print(e)
+
+    return redirect(url_for('removecart', id=key))
+
+
+@app.route("/removesaved/<int:id>")
+@login_required
+def removesaved(id):
+    if 'Savebook' not in session and len(session['Savebook']) <= 0:
+        return redirect(request.referrer)
+    try:
+        session.modified = True
+        for key, item in session['Savebook'].items():
+            if int(key) == id:
+                session['Savebook'].pop(key, None)
+                return redirect(url_for('shoppingcart'))
+    except Exception as e:
+        print(e)
+        return redirect(url_for('shoppingcart'))
+        
+        
+@app.route("/updatecart/<int:id>", methods=['POST'])
+@login_required
+def updatecart(id):
+    if 'Shoppingcart' not in session and len(session['Shoppingcart']) <= 0:
+        return redirect(request.referrer)
+    if request.method == "POST":
+        quantity = request.form.get('quantity')
+        try:
+            session.modified = True
+            for key, item in session['Shoppingcart'].items():
+                if int(key) == id:
+                    item['quantity'] = quantity
+                    return redirect(url_for('shoppingcart'))
+        except Exception as e:
+            print(e)
+            return redirect(url_for('shoppingcart'))
+
+@app.route("/removecart/<int:id>")
+@login_required
+def removecart(id):
+    if 'Shoppingcart' not in session and len(session['Shoppingcart']) <= 0:
+        return redirect(request.referrer)
+    try:
+        session.modified = True
+        for key, item in session['Shoppingcart'].items():
+            if int(key) == id:
+                session['Shoppingcart'].pop(key, None)
+                return redirect(url_for('shoppingcart'))
+    except Exception as e:
+        print(e)
+        return redirect(url_for('shoppingcart'))
+
+
 @app.route("/shoppingcart", methods=['GET', 'POST'])
 @login_required
 def shoppingcart():
-    return render_template('shoppingcart.html', title='Shopping Cart')
+    total = 0
+    subtotal = 0
+    for key, product in session['Shoppingcart'].items():
+        total = float(product['price']) * int(product['quantity'])
+        subtotal += total
+    return render_template('shoppingcart.html', title='Shopping Cart', subtotal = subtotal)
 
 
 @app.route("/orders", methods=['GET'])
