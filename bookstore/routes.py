@@ -80,7 +80,8 @@ def account():
         form.zip.data = current_user.zip
     return render_template('account.html', title='Account', form=form)
 
-@app.route("/addcart", methods=['POST'])
+
+@app.route("/addcart", methods=['POST', 'GET'])
 @login_required
 def addcart():
     try:
@@ -99,6 +100,7 @@ def addcart():
         print(e)
     return redirect(request.referrer)
 
+
 @app.route("/shoppingcart", methods=['GET', 'POST'])
 @login_required
 def shoppingcart():
@@ -109,22 +111,34 @@ def shoppingcart():
 def orders():
     return render_template('orders.html', title='Orders')
 
-#@app.route('/book/<int:id>')
-#def book(id):
-#    post = Book.query.get_or_404(id)
-#    db.session.delete(post)
-#    db.session.commit()
-#    return redirect('/home')
+
+@app.route('/book/<int:id>', methods=['GET', 'POST'])
+def book(id):
+    image_file = url_for('static', filename='book_covers/' + Book.image_file)
+    post = Book.query.get_or_404(id)
+    return render_template('book.html', title = Book.title, post=post, image_file=image_file)
+
+
+@app.route('/author/<string:author>', methods=['GET', 'POST'])
+def book_author(author):
+    page = request.args.get('page', 1, type=int)
+    author = Book.query.filter_by(author=author).first_or_404()
+    books = Book.query.filter_by(author=author).paginate(page=page,per_page=5)
+    return render_template('author_books.html', title=Book.author, author=author, books=books)
+
 
 @app.route('/browse', methods=['GET', 'POST'])
 def browse():
+    page = request.args.get('page', 1, type=int)  #Javi's Code
     form = SearchForm()
-    books = Book.query.all()
+    #books = Book.query.all()   #Old code to display all
+    books = Book.query.paginate(page=page,per_page=5)     #Javi's Code
     path = url_for('static', filename='book_covers/')
 
     if form.validate_on_submit():
         selection = form.select.data
-        books = Book.query.order_by(selection)
+        #books = Book.query.order_by(selection)
+        books = Book.query.order_by(selection).paginate(page=page,per_page=5)   #Javi's code
         return render_template('browse.html', title='Browse', form=form, books=books, path=path)
 
     return render_template('browse.html', title='Browse', books=books, form=form, path=path)    
@@ -154,6 +168,7 @@ def reset_request():
         return redirect(url_for('login'))
     return render_template('reset_request.html', title='Reset Password', form=form)
 
+
 @app.route('/change_password', methods=['GET', 'POST'])
 def change_password():
     form = RequestResetForm()
@@ -164,6 +179,7 @@ def change_password():
         flash('Reset Password Instructions Sent. Please check spam folder if you did not see it arrive.', 'info')
         return redirect(url_for('account'))
     return render_template('change_password.html', title='Change Password', form=form)
+
 
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_token(token):
