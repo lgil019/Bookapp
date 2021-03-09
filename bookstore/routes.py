@@ -180,10 +180,13 @@ def removecart(id):
 def shoppingcart():
     total = 0
     subtotal = 0
-    for key, product in session['Shoppingcart'].items():
-        total = float(product['price']) * int(product['quantity'])
-        subtotal += total
-    return render_template('shoppingcart.html', title='Shopping Cart', subtotal = subtotal)
+    if 'Shoppingcart' not in session:
+        return render_template('shoppingcart.html', title='Shopping Cart', subtotal=0)
+    else:
+        for key, product in session['Shoppingcart'].items():
+            total = float(product['price']) * int(product['quantity'])
+            subtotal += total
+        return render_template('shoppingcart.html', title='Shopping Cart', subtotal = subtotal)
 
 
 @app.route("/orders", methods=['GET'])
@@ -203,7 +206,7 @@ def book_author(author):
     page = request.args.get('page', 1, type=int)
     author = Book.query.filter_by(author=author).first_or_404()
     books = Book.query.filter_by(author=author).paginate(page=page,per_page=5)
-    return render_template('author_books.html', title=Book.author, author=author, books=books)
+    return render_template('author.html', title=Book.author, author=author, books=books)
 
 
 @app.route('/browse', methods=['GET', 'POST'])

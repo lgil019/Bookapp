@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h1>Shopping Cart</h1>
+<h2>Shopping Cart</h2>
 
 <div class="container">
     
@@ -9,7 +9,7 @@
     <div id="tableItems">
         
         <div>
-
+        {% if Shoppingcart in session:%}
             {% for key , product in session['Shoppingcart'].items() %}
 
             <hr id="seperator">
@@ -28,6 +28,7 @@
                 <a href="{{url_for('removecart', id=key)}}">Remove</a> <br>
                 <a href="{{url_for('movetosaved', id=key)}}">Move to Saved Books</a> <br>
             {% endfor %}
+        {% endif %}
         </div>
         <hr id="seperator">
         <div id="total">

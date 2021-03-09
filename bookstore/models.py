@@ -46,7 +46,7 @@ class Book(db.Model):
     genre = db.Column(db.String(30), nullable=False)
     book_rating = db.Column(db.Integer, nullable=False, default = 'N/A')
     publisher = db.Column(db.String(30), nullable=False, default = 'N/A')
-    comments = db.Column(db.String(), nullable=False, default = 'N/A')
+    summary = db.Column(db.String(), nullable=False, default = 'N/A')
     date_published = db.Column(db.String)
     price = db.Column(db.Numeric(8,2), nullable=False)
     image = db.Column(db.String(40), default='imagenotfound.jpg')
