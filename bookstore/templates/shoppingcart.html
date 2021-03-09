@@ -9,7 +9,7 @@
     <div id="tableItems">
         
         <div>
-        {% if Shoppingcart in session:%}
+        {% if 'Shoppingcart' in session: %}
             {% for key , product in session['Shoppingcart'].items() %}
 
             <hr id="seperator">
