@@ -46,7 +46,11 @@ class Book(db.Model):
     genre = db.Column(db.String(30), nullable=False)
     book_rating = db.Column(db.Integer, nullable=False, default = 'N/A')
     publisher = db.Column(db.String(30), nullable=False, default = 'N/A')
+<<<<<<< Updated upstream
     comments = db.Column(db.String(30), nullable=False, default = 'N/A')
+=======
+    summary = db.Column(db.String(), nullable=True, default = 'N/A')
+>>>>>>> Stashed changes
     date_published = db.Column(db.String)
     price = db.Column(db.Numeric(8,2), nullable=False)
     cartItems = db.relationship('ShoppingCart', backref='BookItem', lazy=True)

@@ -9,7 +9,13 @@ from flask_mail import Message
 
 @app.route("/")
 def home():
+<<<<<<< Updated upstream
     return render_template('home.html', title="Home")
+=======
+    books = Book.query.all()
+    path = url_for('static', filename='book_covers/')
+    return render_template('home.html', title="Home", path=path)
+>>>>>>> Stashed changes
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -87,11 +93,32 @@ def orders():
 
 @app.route('/book/<int:id>')
 def book(id):
+<<<<<<< Updated upstream
     post = Book.query.get_or_404(id)
     return render_template('book.html', title = Book.title, post=post)
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
+=======
+    book = Book.query.filter_by(id=id).first()
+    bookImage = book.image
+    path = url_for('static', filename='book_covers/')
+    post = Book.query.get_or_404(id)
+    return render_template('book.html', title = Book.title, post=post,path=path)
+
+
+@app.route('/author/<string:author>', methods=['GET', 'POST'])
+def book_author(author):
+    page = request.args.get('page', 1, type=int)
+    author = Book.query.filter_by(author=author).first_or_404()
+    books = Book.query.filter_by(author=author).paginate(page=page,per_page=5)
+    return render_template('author.html', title=Book.author, author=author, books=books)
+
+
+@app.route('/browse', methods=['GET', 'POST'])
+def browse():
+    page = request.args.get('page', 1, type=int)  #Javi's Code
+>>>>>>> Stashed changes
     form = SearchForm()
     books = Book.query.all()
     
