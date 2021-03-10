@@ -2,9 +2,6 @@
 
 
 {% block content %}
-<<<<<<< Updated upstream
-    <h2>Browse:</h2>
-=======
 <div class="content">
     <form method="POST" action="">
         {{ form.hidden_tag() }}
@@ -30,12 +27,11 @@
 
         </div>
         <div class="product-info">
-            <a href="{{ url_for('book', id=book.id) }}"> <!--JAVI'S CODE-->
+            <a href="href ={{ url_for('book', id=book.id) }}>{{ book.title }}"></a> <!--JAVI'S CODE-->
             <div class="media" >       
                 <img class="book cover" src="{{ path + book.image }}" width='250' />
             </div> 
             <h5>{{ book.title }}</h5>
-        </a>
             <h6>Author: {{ book.author }}</h6>
             <h6>Price: ${{ book.price }}</h6>
             <h6>Rating: {{ book.book_rating }}</h6>
@@ -63,5 +59,4 @@
     {%endfor%}
     
 </div>
->>>>>>> Stashed changes
 {% endblock content %}
