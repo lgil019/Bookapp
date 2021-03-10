@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+    <h2>Browse our best sellers:</h2>
+
+    <div class="row">
+        <div class = "content-section">
+            <div class = "product-image">
+                <a href="{{ url_for('book', id=7) }}">
+                <img src="{{ path + 'TheHungerGames.jpg'}}"  height='250' style="margin: 10px 10px 10px 10px;" >
+                <p>The Hunger Games</p>
+                </a>
+            </div>
+        </div>
+        <div class = "content-section">
+            <div class = "product-image">
+                <a href="{{ url_for('book', id=8) }}">
+                <img src="{{ path + 'CatchingFire.jpg'}}"  height='250' style="margin: 10px 10px 10px 10px;">
+                <p>Catching Fire</p>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class = "content-section">
+            <div class = "product-image">
+                <a href="{{ url_for('book', id=9) }}">
+                <img src="{{ path + 'Mockingjay.jpg'}}"  height='250' style="margin: 10px 10px 10px 10px;">
+                <p>Mocking Jay</p>
+                </a>
+            </div>
+        </div>
+        <div class = "content-section">
+            <div class = "product-image">
+                <a href="{{ url_for('book', id=18) }}">
+                <img src="{{ path + 'Divergent.jpg'}}"  height='250' style="margin: 10px 10px 10px 10px;">
+                <p>Divergent</p>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class = "content-section">
+            <div class = "product-image">
+                <a href="{{ url_for('book', id=20) }}">
+                <img src="{{ path + 'TheGiver.jpg'}}"  height='250' style="margin: 10px 10px 10px 10px;">
+                <p>The Giver</p>
+                </a>
+            </div>
+        </div>
+        <div class = "content-section">
+            <div class = "product-image">
+                <a href="{{ url_for('book', id=16) }}">
+                <img src="{{ path + 'IPromise.jpg'}}"  height='250' style="margin: 10px 10px 10px 10px;" >
+                <p>I Promise</p>
+                </a>
+            </div>
+        </div> 
+          
+    </div>
+    <div class = "row">
+        <div class = "content-section">
+            <div class = "product-image">
+                <a href="{{ url_for('book', id=6) }}">
+                    <img src="{{ path + 'TheAlchemist.jpg'}}"  height='250' style="margin: 10px 10px 10px 10px;">
+                <p>The Alchemist</p>
+                </a>
+            </div>
+        </div> <div class = "content-section">
+            <div class = "product-image">
+                <a href="{{ url_for('book', id=15) }}">
+                    <img src="{{ path + 'ThingsFallApart.jpg'}}"  height='250' style="margin: 10px 10px 10px 10px;">
+                <p>Things Fall Apart</p>
+                </a>
+            </div>
+        </div> 
+          
+          
+    </div>
+    <div class = "row">
+        <div class = "content-section">
+            <div class = "product-image">
+                <a href="{{ url_for('book', id=19) }}">
+                    <img src="{{ path + 'DonQuixote.jpg'}}"  height='250' style="margin: 10px 10px 10px 10px;">
+                    <p>Don Quixote</p>
+                </a>
+            </div>
+        </div> <div class = "content-section">
+            <div class = "product-image">
+                <a href="{{ url_for('book', id=13) }}">
+                    <img src="{{ path + 'AnimalFarm.jpg'}}"  height='250' style="margin: 10px 10px 10px 10px;">
+                    <p>Animal Farm</p>
+                </a>
+            </div>
+        </div> 
+    </div>
+{% endblock content %}
