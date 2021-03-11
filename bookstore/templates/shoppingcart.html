@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+
+<h2>Shopping Cart</h2>
+<div class="content-section">
+
+    <div id="tableItems">
+        {% for product in products %}
+        <div>
+            <hr id="seperator">
+            <div id="bookImage">
+            </div>
+            <div id="bookTitle">
+                <span id="bookNameTag">{{product.bookTitle}}</span><br>
+                In stock<br>
+                <a href="/removeFromCart?productId={{row[0]}}">Remove</a>
+            </div>
+            <div id="itemPrice">
+                ${{product.itemPrice}}
+            </div>
+        </div>
+        {% endfor %}
+        <hr id="seperator">
+        <div id="total">
+            <span id="subtotal">Subtotal</span> : ${{totalPrice}}
+        </div>
+
+{% endblock content %}
