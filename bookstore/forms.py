@@ -80,3 +80,19 @@ class ResetPasswordForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Reset Password')
+
+
+class AddShippingAddress(FlaskForm):
+    street = StringField('Street Adress')
+    city = StringField('City')
+    zip = IntegerField('Zip')
+    state = StringField('State',validators=[Length(min=2, max=2)])
+    submit = SubmitField('Add Shipping Address')
+
+class AddPaymentMethod(FlaskForm):
+    name = StringField('Name (as appears on card)',validators=[DataRequired()])
+    card = StringField('Card Number',validators=[Length(min=16, max=16)])
+    expiration_month = StringField('Expiration Month (2 digit month)',validators=[Length(min=2, max=2)])
+    expiration_year = StringField('Expiration Year (4 digit year)',validators=[Length(min=4, max=4)])
+    csv = StringField('Security Code',validators=[Length(min=3, max=3)])
+    submit = SubmitField('Add Payment Method')
