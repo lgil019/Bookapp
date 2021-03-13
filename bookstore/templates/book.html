@@ -1,0 +1,60 @@
+{% extends 'layout.html'%}
+
+
+{% block content %}
+
+
+
+<h1>Book Details</h1>
+<body> 
+    <div class="container" 
+         style="text-align: center;  
+                margin-top: 5em;"> 
+        <!-- Image to be enlarged and 
+            onclick() function call-->
+        <img src= "{{ path + book.image }}" height="500"           
+          onclick="enlargeImg()" 
+             id="img1" /> 
+            <p>Click on image to zoom</p>
+        <br /> 
+        <br /> 
+        <br /> 
+        <br>
+        <br>
+        <!-- Button to reset the Image size -->
+        <button onclick="resetImg()">Reset Zoom
+      </button> 
+    </div> 
+
+    <!-- script to set display property -->
+    <script> 
+        img = document.getElementById("img1"); 
+        // Function to set image dimensions 
+        function enlargeImg() { 
+            //img.style.width = "80%"; 
+            //img.style.height = "auto"; 
+            img.style.transform = "scale(1.35)"; 
+            img.style.transition = "width 0.5s ease"; 
+        } 
+        // Function to reset image dimensions 
+        function resetImg() { 
+            //img.style.width = "40%"; 
+            //img.style.height = "auto"; 
+            img.style.transform = "scale(1.0)"; 
+            img.style.transition = "width 0.5s ease"; 
+        } 
+    </script> 
+</body> 
+<hr>
+<h2> Title: {{book.title}} </h2>
+<a href="{{ url_for('book_author', author=book.author) }}">Author: {{ book.author }}</a>
+<h4>Price: ${{book.price}}</h4>
+<h4>Genre: {{ book.genre }}</h4>
+<h4>Publisher: {{ book.publisher }}</h4>
+<h5>Rating: {{book.book_rating}}</h5>
+<h5>Comments: {{ book.comments }}</h5>
+
+<hr>
+
+
+{% endblock %}
