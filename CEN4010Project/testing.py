@@ -1,8 +1,6 @@
-from bookstore.models import Book
 
-books = Book.query.all()
+from bookstore import db
+
+db.create_all()
 
 
-for book in books:
-    print(book.title)
-    print("--- "  + book.author)

@@ -55,13 +55,12 @@ class Book(db.Model):
     def __repr__(self):
         return f"Book('{self.title}', '{self.author}', '{self.genre}', '{self.book_rating}', '{self.publisher}', '{self.date_published}')"
 
-class Reviews(db.Model):
+class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    Username = db.Column(db.String(200), unique=True, nullable=False)
+    username = db.Column(db.String(200), unique=True, nullable=False)
     message = db.Column(db.Text, nullable=False)
     book_id = db.Column(db.Integer, db.ForeignKey('book.id', ondelete='CASCADE'), nullable=False)
     book = db.relationship('Book', backref=db.backref('book',lazy=True, passive_deletes=True))
-    date_pub = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
  
 #class ShoppingCart(db.Model):
 #    id = db.Column(db.Integer, primary_key=True)
