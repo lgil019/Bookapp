@@ -27,13 +27,13 @@
 
         </div>
         <div class="product-info">
-            <a href="{{ url_for('book', id=book.id) }}"> <!--JAVI'S CODE-->
+            <a href="{{ url_for('book', id=book.id) }}"> <!--JAVI'S CODE--> 
             <div class="media" >       
                 <img class="book cover" src="{{ path + book.image }}" width='250' />
             </div> 
             <h5>{{ book.title }}</h5>
         </a>
-        <a href="{{ url_for('book', id=book.id) }}">
+            <h6>Author: {{ book.author }}</h6>
             <h6>Price: ${{ book.price }}</h6>
             <h6>Rating: {{ book.book_rating }}</h6>
             <h6>Date published: {{ book.date_published }}</h6>
