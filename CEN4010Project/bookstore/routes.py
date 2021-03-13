@@ -2,7 +2,7 @@ import bcrypt
 from flask import render_template, url_for, flash, redirect, request, session
 from bookstore import app, db, bcrypt, mail
 from bookstore.forms import RegistrationForm, LoginForm, UpdateAccountForm, SearchForm, RequestResetForm, ResetPasswordForm
-from bookstore.models import User, Book
+from bookstore.models import User, Book, Review
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
@@ -199,14 +199,14 @@ def orders():
 def book(id):
     post = Book.query.get_or_404(id)
     path = url_for('static', filename='book_covers/')
+    reviews = Review.query.filter_by(book_id=Book.id).all()
     
     if request.method == 'POST':
-        book_id = book.id
         username = request.form.get('username')
         message = request.form.get('message')
-        review = Reviews(username=username,message=message,book_id=book_id)
-        db.session.add(comment)
-        post.comments = post.comments + 1
+        review = Review(username=username,message=message,book_id=book_id)
+        db.session.add(review)
+        post.reviews += 1
         db.session.commit()
         flash('Your review has has been submited  submitted will be published after aproval of admin', 'success')
         return redirect(request.url)

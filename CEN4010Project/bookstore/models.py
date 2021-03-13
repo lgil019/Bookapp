@@ -50,6 +50,7 @@ class Book(db.Model):
     date_published = db.Column(db.String)
     price = db.Column(db.Numeric(8,2), nullable=False)
     image = db.Column(db.String(40), default='imagenotfound.jpg')
+    #review = db.Column(db.Integer, default = '0')
     #cartItems = db.relationship('ShoppingCart', backref='BookItem', lazy=True)
 
     def __repr__(self):
