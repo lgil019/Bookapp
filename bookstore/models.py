@@ -19,7 +19,7 @@ class User(db.Model, UserMixin):
     city = db.Column(db.String(30))
     state = db.Column(db.String(2))
     zip = db.Column(db.String(5))
-    cartItems = db.relationship('ShoppingCart', backref='customer', lazy=True)
+    #cartItems = db.relationship('ShoppingCart', backref='customer', lazy=True)
     
     def get_reset_token(self, expires_sec=3600):
         s = Serializer(app.config['SECRET_KEY'], expires_sec)
@@ -46,22 +46,19 @@ class Book(db.Model):
     genre = db.Column(db.String(30), nullable=False)
     book_rating = db.Column(db.Integer, nullable=False, default = 'N/A')
     publisher = db.Column(db.String(30), nullable=False, default = 'N/A')
-<<<<<<< Updated upstream
-    comments = db.Column(db.String(30), nullable=False, default = 'N/A')
-=======
-    summary = db.Column(db.String(), nullable=True, default = 'N/A')
->>>>>>> Stashed changes
+    summary = db.Column(db.String(), nullable=False, default = 'N/A')
     date_published = db.Column(db.String)
     price = db.Column(db.Numeric(8,2), nullable=False)
-    cartItems = db.relationship('ShoppingCart', backref='BookItem', lazy=True)
+    image = db.Column(db.String(40), default='imagenotfound.jpg')
+    #cartItems = db.relationship('ShoppingCart', backref='BookItem', lazy=True)
 
     def __repr__(self):
         return f"Book('{self.title}', '{self.author}', '{self.genre}', '{self.book_rating}', '{self.publisher}', '{self.date_published}')"
 
 
-class ShoppingCart(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    book_id = db.Column(db.Integer, db.ForeignKey('book.id'))
-    quantity = db.Column(db.Integer, nullable = False, default = 0)
-    total = db.Column(db.Integer, nullable = False, default = 0)
+#class ShoppingCart(db.Model):
+#    id = db.Column(db.Integer, primary_key=True)
+#    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+#    book_id = db.Column(db.Integer, db.ForeignKey('book.id'))
+#    quantity = db.Column(db.Integer, nullable = False, default = 0)
+#    total = db.Column(db.Integer, nullable = False, default = 0)
