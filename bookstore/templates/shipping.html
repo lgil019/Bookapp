@@ -1,71 +1,72 @@
-{% extends "layout.html" %}
+{% extends "layout_narrow.html" %}
 
 
 {% block content %}
+<div class="content-section">
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Add Shipping Addresses:</legend>
 
-<form method="POST" action="">
-    {{ form.hidden_tag() }}
-    <fieldset class="form-group">
-        <legend class="border-bottom mb-4">Add Shipping Addresses:</legend>
+            <div class="form-group">
+                {{ form.street.label(class="form-control-label") }}
 
-        <div class="form-group">
-            {{ form.street.label(class="form-control-label") }}
-
-            {% if form.street.errors %}
-            {{ form.street(class="form-control form-control-md is-invalid") }}
-            <div class="invalid-feedback">
-                {% for error in form.street.errors %}
-                <span>{{ error }}</span>
-                {% endfor %}
+                {% if form.street.errors %}
+                {{ form.street(class="form-control form-control-md is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.street.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.street(class="form-control form-control-md") }}
+                {% endif %}
             </div>
-            {% else %}
-            {{ form.street(class="form-control form-control-md") }}
-            {% endif %}
-        </div>
-        <div class="form-group">
-            {{ form.city.label(class="form-control-label") }}
-            {% if form.city.errors %}
-            {{ form.city(class="form-control form-control-md is-invalid") }}
-            <div class="invalid-feedback">
-                {% for error in form.city.errors %}
-                <span>{{ error }}</span>
-                {% endfor %}
+            <div class="form-group">
+                {{ form.city.label(class="form-control-label") }}
+                {% if form.city.errors %}
+                {{ form.city(class="form-control form-control-md is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.city.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.city(class="form-control form-control-md") }}
+                {% endif %}
             </div>
-            {% else %}
-            {{ form.city(class="form-control form-control-md") }}
-            {% endif %}
-        </div>
-        <div class="form-group">
-            {{ form.state.label(class="form-control-label") }}
-            {% if form.state.errors %}
-            {{ form.state(class="form-control form-control-md is-invalid") }}
-            <div class="invalid-feedback">
-                {% for error in form.state.errors %}
-                <span>{{ error }}</span>
-                {% endfor %}
+            <div class="form-group">
+                {{ form.state.label(class="form-control-label") }}
+                {% if form.state.errors %}
+                {{ form.state(class="form-control form-control-md is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.state.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.state(class="form-control form-control-md") }}
+                {% endif %}
             </div>
-            {% else %}
-            {{ form.state(class="form-control form-control-md") }}
-            {% endif %}
-        </div>
-        <div class="form-group">
-            {{ form.zip.label(class="form-control-label") }}
-            {% if form.zip.errors %}
-            {{ form.zip(class="form-control form-control-md is-invalid") }}
-            <div class="invalid-feedback">
-                {% for error in form.zip.errors %}
-                <span>{{ error }}</span>
-                {% endfor %}
+            <div class="form-group">
+                {{ form.zip.label(class="form-control-label") }}
+                {% if form.zip.errors %}
+                {{ form.zip(class="form-control form-control-md is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.zip.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.zip(class="form-control form-control-md") }}
+                {% endif %}
             </div>
-            {% else %}
-            {{ form.zip(class="form-control form-control-md") }}
-            {% endif %}
+        </fieldset>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-outline-info") }}
         </div>
-    </fieldset>
-    <div class="form-group">
-        {{ form.submit(class="btn btn-outline-info") }}
-    </div>
-</form>
+    </form>
+</div>
 
 <div class="content-section">
     <h4 class="h4">Shipping Addresses</h4>
@@ -74,9 +75,9 @@
     <div>
         <h5 class="h5">{{ entry.street }}</h5>
         <h2 class="h5">{{ entry.city }}, {{entry.state}} {{entry.zip}}</h2>
-        <a href= "{{url_for('removeshipping', shipping_id=entry.id)}}">Remove</a> <br>
+        <a href="{{url_for('removeshipping', shipping_id=entry.id)}}">Remove</a> <br>
         <br>
-    {% endfor %}
+        {% endfor %}
     </div>
 </div>
 

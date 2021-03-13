@@ -1,8 +1,8 @@
-{% extends "layout.html" %}
+{% extends "layout_narrow.html" %}
 
 
 {% block content %}
-
+<div class="content-section">
     <form method="POST" action="">
         {{ form.hidden_tag() }}
         <fieldset class="form-group">
@@ -81,20 +81,20 @@
             {{ form.submit(class="btn btn-outline-info") }}
         </div>
     </form>
-
-    <div class="content-section">
-        <h4 class="h4">Payment Methods</h4>
+</div>
+<div class="content-section">
+    <h4 class="h4">Payment Methods</h4>
+    <br>
+    {% for entry in payments %}
+    <div>
+        <h5 class="h5">{{ entry.name }}</h5>
+        <h5 class="h5">{{ entry.card }}</h5>
+        <h5 class="h5">{{ entry.exp_month }}/{{entry.exp_year}}</h5>
+        <a href="{{url_for('removepayment', payment_id=entry.id)}}">Remove</a> <br>
         <br>
-        {% for entry in payments %}
-        <div>
-            <h5 class="h5">{{ entry.name }}</h5>
-            <h5 class="h5">{{ entry.card }}</h5>
-            <h5 class="h5">{{ entry.exp_month }}/{{entry.exp_year}}</h5>
-            <a href="{{url_for('removepayment', payment_id=entry.id)}}">Remove</a> <br>
-            <br>
         {% endfor %}
-        </div>
     </div>
-    
+</div>
+
 
 {% endblock content %}
