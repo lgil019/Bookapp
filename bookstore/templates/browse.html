@@ -19,14 +19,18 @@
 </div>
 
 
-<div class="container">
+<div class="content">
 
-    {%for book in books%}
+    {%for book in books.items%}
     <div class="content-section">
         <div class="product-image">
 
         </div>
         <div class="product-info">
+            <a href="href ={{ url_for('book', id=book.id) }}>{{ book.title }}"></a> <!--JAVI'S CODE-->
+            <div class="media" >       
+                <img class="book cover" src="{{ path + book.image }}" width='250' />
+            </div> 
             <h5>{{ book.title }}</h5>
             <h6>Author: {{ book.author }}</h6>
             <h6>Price: ${{ book.price }}</h6>
@@ -42,5 +46,17 @@
     </div>
     {%endfor%}
 
+    {% for page_num in books.iter_pages(left_edge=1, right_edge=1, left_current=5, right_current=5) %}
+      {% if page_num %}
+        {% if books.page == page_num %}
+       <a class="btn btn-info mb-4"href="{{ url_for('browse', page=page_num) }}">{{ page_num }}</a>
+        {% else %}
+        <a class="btn btn-outline-info mb-4"href="{{ url_for('browse', page=page_num) }}">{{ page_num }}</a>
+        {% endif %}
+      {% else %}
+        ...
+      {% endif %}
+    {%endfor%}
+    
 </div>
 {% endblock content %}

@@ -6,18 +6,17 @@
 
 <h1>Book Details</h1>
 
+<h1>Book Details</h1>
+<image href="{{ url_for('static', filename='book_covers/AnimalFarm.jpg')}}">
 <hr>
-<h2> Create New Blog Post: </h2>
-<form action = '/posts' method = 'POST'>
-    Title: <input type = 'text' name = 'title' id = 'title'>
-    <br>
-    Post: <input type = 'text' name = 'content' id = 'content'>
-    <br>
-    Author: <input type = 'text' name = 'author' id = 'author'>
-    <br>
-    <input type = 'submit' value = 'Post'>
-    <br>
-</form>
+<h2> Title: {{post.title}} </h2>
+<a href="{{ url_for('book_author', author=post.author) }}"> {{ post.author }}</a>
+<h4>Price: ${{post.price}}</h4>
+<h4>Genre: {{ post.genre }}</h4>
+<h4>Publisher: {{ post.publisher }}</h4>
+<h5>Rating: {{post.book_rating}}</h5>
+<h5>Comments: {{ post.comments }}</h5>
+
 <hr>
 
 
