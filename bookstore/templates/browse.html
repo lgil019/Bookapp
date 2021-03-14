@@ -43,6 +43,10 @@
                 <input type="hidden" name="book_id" value="{{ book.id }}">
                 <button type="submit" class="btn btn-outline-info">Add to Cart</button>
             </form>
+        {% set bookid = book.id|int %}
+        <form action="{{ url_for('movetosaved', id=bookid) }}" method="POST">
+            <button type="submit" class="btn btn-outline-info">Add to Saved</button>
+         </form>
         </div>
     </div>
     {%endfor%}
