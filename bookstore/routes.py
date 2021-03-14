@@ -95,9 +95,12 @@ def addcart():
                 session['Shoppingcart'] = merge(session['Shoppingcart'], item)
             else:
                 session['Shoppingcart'] = item
-                return redirect(request.referrer)
+            for key, item in session['Savebook'].items():
+                if int(key) == book.id:
+                    return redirect(url_for('removesaved', id=book.id))
     except Exception as e:
         print(e)
+
     return redirect(request.referrer)
 
 
@@ -105,25 +108,21 @@ def addcart():
 @login_required
 def movetosaved(id):
     try:
-        quantity = 0
-        for key, item in session['Shoppingcart'].items():
-            if int(key) == id:
-                quantity = item['quantity']
-
-        book = Book.query.filter_by(id=id).first()
-        book_id = book.id
-        print(quantity)
-        if quantity:
-            item = {book_id:{'title':book.title, 'author': book.author, 'price': float(book.price), 'quantity':quantity}}
+        book_id = id
+        book = Book.query.filter_by(id=book_id).first()
+        if book_id and request.method == "POST":
+            item = {str(book_id):{'title':book.title, 'author': book.author, 'price': float(book.price), 'quantity':1}}
             if 'Savebook' in session:
+                print(session['Savebook'])
                 session['Savebook'] = merge(session['Savebook'], item)
             else:
                 session['Savebook'] = item
-                #return redirect(request.referrer)
+            for key, item in session['Shoppingcart'].items():
+                if int(key) == id:
+                    return redirect(url_for('removecart', id=id))
     except Exception as e:
         print(e)
-
-    return redirect(url_for('removecart', id=key))
+    return redirect(request.referrer)
 
 
 @app.route("/removesaved/<int:id>")
