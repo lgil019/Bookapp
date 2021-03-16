@@ -23,6 +23,7 @@ class User(db.Model, UserMixin):
     addresses = db.relationship('ShippingAddress', backref='user')
     payments = db.relationship('PaymentMethod', backref='user')
     purchased = db.relationship('Purchases', backref='user')
+    review = db.relationship('Review', backref='user')
     
     def get_reset_token(self, expires_sec=3600):
         s = Serializer(app.config['SECRET_KEY'], expires_sec)
@@ -53,7 +54,12 @@ class Book(db.Model):
     date_published = db.Column(db.String)
     price = db.Column(db.Numeric(8,2), nullable=False)
     image = db.Column(db.String(40), default='imagenotfound.jpg')
+    numRatings = db.Column(db.Integer, default=0)
+    sumRatings = db.Column(db.Integer, default=0)
     purchased = db.relationship('Purchased', backref='book')
+    review = db.relationship('Purchased', backref='book')
+    
+
 
     def __repr__(self):
         return f"Book('{self.title}', '{self.author}', '{self.genre}', '{self.book_rating}', '{self.publisher}', '{self.date_published}')"
@@ -86,4 +92,12 @@ class Purchases(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     book_id = db.Column(db.Integer, db.ForeignKey('book.id'))
+
+class Reviews(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    review = db.Column(db.String(500))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    book_id = db.Column(db.Integer, db.ForeignKey('book.id'))
+
+
 
