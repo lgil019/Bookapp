@@ -1,0 +1,26 @@
+id,title,author,genre,book_rating,publisher,comments,date_published,price
+1,The Cat in The Hat,Dr.Seuss,Family,0,Penguin Random House LLC.,,1957,19.99
+2,The Great Gatsby,F Scott Fitgerald,Tragedy,0,Charles Scribner's Sons,,1925,8.74
+3,The Catcher in the Rye,J D Salinger,Fiction,0,"Little, Brown and Company",,1951,5.99
+4,To Kill a Mockingbird,Harper Lee,Southern Gothic,0,J B Lippincott & Co,,1960,7.19
+5,Hotron Hears  a Who,Dr. Seuss,"Family
+",0,Penguin Random House LLC.,,1954,8.79
+6,The Alchemist,Paulo Coehlo,Self-discovery,0,HarperTorch,,1988,10.47
+7,The Hunger Games,Suzanne Collins,Adventue,0,Scholastic Corporation,,2008,9.96
+8,Catching Fire,Suzanne Collins,Science Fiction,0,Scholastic Corporation,,2009,8
+9,Mockingjay,Suzanne Collins,Adventure,0,Scholastic Corporation,,2010,8
+10,The Little Prince,Antoine de Saint Exupéry,"Human nature
+",0,Reynal and Hitchock,,1943,7.49
+11,The Outsiders,Stephen King,Mystery,0,Scribner,,2018,11.93
+12,The Fault in Our Stars,John Greene,Young Adult,0,Dutton Books,,2012,5.99
+13,Animal Farm,George Orvell,Political Satire,0,Secker and Warburg,,1945,7.48
+14,Hamlet,William Shakespeare,Tragedy,0,Simon and Schuster,,1603,9.99
+15,Things Fall Apart,Chinua Achebe,Historical Fiction,0,Penguin Publishing Book,,1994,11.7
+16,I Promise,LeBron James,"Fiction
+",0,HarperCollins,,2020,12.98
+17,Milk and Honey,Rupi Kaur,Instapoetry,0,Andrew McMeel Publishing,,2014,8.69
+18,Divergent,"Veronica Roth
+",Science Fiction,0,Katherine Tegen Books,,2011,14.25
+19,Don Quixote,Miguel de Cervantes,Novel,0,Francisco de Robles,,1605,15.3
+20,"The Giver
+",Lois Lowry,Dystopian novel,0,Houghton Miffin,,1993,9.99

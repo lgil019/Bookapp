@@ -33,6 +33,10 @@ def register():
     return render_template('register.html', title='Register', form=form)
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> cb848e38674177c4cf88aa96774b3ce92375393b
 @app.route("/login", methods=['GET','POST'])
 def login():
     if current_user.is_authenticated:

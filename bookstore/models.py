@@ -5,7 +5,10 @@ from bookstore import db, login_manager, app
 from flask_login import UserMixin
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> cb848e38674177c4cf88aa96774b3ce92375393b
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -22,8 +25,12 @@ class User(db.Model, UserMixin):
     zip = db.Column(db.String(5))
     addresses = db.relationship('ShippingAddress', backref='user')
     payments = db.relationship('PaymentMethod', backref='user')
+<<<<<<< HEAD
     purchased = db.relationship('Purchases', backref='user')
     review = db.relationship('Reviews', backref='user')
+=======
+    #cartItems = db.relationship('ShoppingCart', backref='customer', lazy=True)
+>>>>>>> cb848e38674177c4cf88aa96774b3ce92375393b
     
     def get_reset_token(self, expires_sec=3600):
         s = Serializer(app.config['SECRET_KEY'], expires_sec)
@@ -54,17 +61,30 @@ class Book(db.Model):
     date_published = db.Column(db.String)
     price = db.Column(db.Numeric(8,2), nullable=False)
     image = db.Column(db.String(40), default='imagenotfound.jpg')
+<<<<<<< HEAD
     numRatings = db.Column(db.Integer, default=0)
     sumRatings = db.Column(db.Integer, default=0)
     purchased = db.relationship('Purchases', backref='book')
     review = db.relationship('Reviews', backref='book')
     
 
+=======
+>>>>>>> cb848e38674177c4cf88aa96774b3ce92375393b
 
     def __repr__(self):
         return f"Book('{self.title}', '{self.author}', '{self.genre}', '{self.book_rating}', '{self.publisher}', '{self.date_published}')"
 
 
+<<<<<<< HEAD
+=======
+#class ShoppingCart(db.Model):
+#    id = db.Column(db.Integer, primary_key=True)
+#    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+#    book_id = db.Column(db.Integer, db.ForeignKey('book.id'))
+#    quantity = db.Column(db.Integer, nullable = False, default = 0)
+#    total = db.Column(db.Integer, nullable = False, default = 0)
+
+>>>>>>> cb848e38674177c4cf88aa96774b3ce92375393b
 class ShippingAddress(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -86,6 +106,7 @@ class PaymentMethod(db.Model):
     csv = db.Column(db.String(3))
 
     def __repr__(self):
+<<<<<<< HEAD
         return f"Card('{self.user_id}', '{self.card}', '{self.exp_month}', '{self.exp_year}', '{self.csv}')"
 
 class Purchases(db.Model):
@@ -101,3 +122,6 @@ class Reviews(db.Model):
 
 
 
+=======
+        return f"Card('{self.user_id}', '{self.card}', '{self.exp_month}', '{self.exp_year}', '{self.csv}')"
+>>>>>>> cb848e38674177c4cf88aa96774b3ce92375393b

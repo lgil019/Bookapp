@@ -88,7 +88,11 @@
     {% for entry in payments %}
     <div>
         <h5 class="h5">{{ entry.name }}</h5>
+<<<<<<< HEAD
         <h5 class="h5">**** **** **** {{ entry.card[-4:] }}</h5>
+=======
+        <h5 class="h5">{{ entry.card }}</h5>
+>>>>>>> cb848e38674177c4cf88aa96774b3ce92375393b
         <h5 class="h5">{{ entry.exp_month }}/{{entry.exp_year}}</h5>
         <a href="{{url_for('removepayment', payment_id=entry.id)}}">Remove</a> <br>
         <br>
