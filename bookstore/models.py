@@ -23,7 +23,7 @@ class User(db.Model, UserMixin):
     addresses = db.relationship('ShippingAddress', backref='user')
     payments = db.relationship('PaymentMethod', backref='user')
     purchased = db.relationship('Purchases', backref='user')
-    review = db.relationship('Review', backref='user')
+    review = db.relationship('Reviews', backref='user')
     
     def get_reset_token(self, expires_sec=3600):
         s = Serializer(app.config['SECRET_KEY'], expires_sec)
@@ -56,8 +56,8 @@ class Book(db.Model):
     image = db.Column(db.String(40), default='imagenotfound.jpg')
     numRatings = db.Column(db.Integer, default=0)
     sumRatings = db.Column(db.Integer, default=0)
-    purchased = db.relationship('Purchased', backref='book')
-    review = db.relationship('Purchased', backref='book')
+    purchased = db.relationship('Purchases', backref='book')
+    review = db.relationship('Reviews', backref='book')
     
 
 
