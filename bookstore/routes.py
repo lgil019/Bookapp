@@ -191,7 +191,6 @@ def shoppingcart():
 
 @app.route('/book/<int:id>', methods=['GET', 'POST'])
 def book(id):
-    #image_file = url_for('static', filename='book_covers/' + Book.image_file)
     book = Book.query.get_or_404(id)
     path = url_for('static', filename='book_covers/')
     return render_template('book.html', title = book.title, book=book,path=path)
@@ -216,10 +215,34 @@ def browse():
     if form.validate_on_submit():
         selection = form.select.data
         #books = Book.query.order_by(selection)
-        books = Book.query.order_by(selection).paginate(page=page,per_page=5)   #Javi's code
+        books = Book.query.order_by(selection).paginate(page=page,per_page=5)   
         return render_template('browse.html', title='Browse', form=form, books=books, path=path)
 
     return render_template('browse.html', title='Browse', books=books, form=form, path=path)    
+
+@app.route('/genres', methods=['GET', 'POST'])
+def genres():
+    genre = request.args.get('genre')
+    if genre == None or genre == 'All':
+        books = Book.query.all()
+    else:
+        books = Book.query.filter_by(genre=genre)
+    path = url_for('static', filename='book_covers/')
+    print(genre)
+    #if form.validate_on_submit():
+    #    selection = form.select.data
+    #    #books = Book.query.order_by(selection)
+    #    books = Book.query.order_by(selection).paginate(page=page,per_page=5)   
+    #    return render_template('browse.html', title='Browse', form=form, books=books, path=path)
+    return render_template('genres.html', title='Genres', books=books, path=path)   
+
+#@app.route('/genre/<string:genre>', methods=['GET','POST'])
+#def genre(genre):
+#    #genre = request.args.get(genre)
+#    genre = genre
+#    books = Book.query.filter_by(genre=genre).all()
+#    path = url_for('static', filename='book_covers/')
+#    return redirect('genres.html', title='Genres', books=books, path=path) 
     
 
 def send_reset_email(user):
@@ -302,6 +325,7 @@ def payments():
         return redirect(url_for('payments'))
     return render_template('payments.html', title='Payment Details', form=form, payments=payments)
 
+
 @app.route("/shipping/<int:shipping_id>/remove", methods=['GET','POST'])
 @login_required
 def removeshipping(shipping_id):
@@ -311,6 +335,7 @@ def removeshipping(shipping_id):
     db.session.delete(address)
     db.session.commit()
     return redirect(url_for('shipping'))
+
 
 @app.route("/payment/<int:payment_id>/remove", methods=['GET','POST'])
 @login_required
