@@ -4,7 +4,8 @@
 {% block content %}
 <h2>Browse our best sellers:</h2>
 
-<div class="row">
+
+<div style="width:95%; margin: auto; text-align: center" class="row" style="text-align: center">
     <div class="content-section" style="margin: 10px 10px 10px 10px;">
         <div class="product-image">
             <a href="{{ url_for('book', id=7) }}">
@@ -21,8 +22,6 @@
             </a>
         </div>
     </div>
-
-
     <div class="content-section" style="margin: 10px 10px 10px 10px;">
         <div class="product-image">
             <a href="{{ url_for('book', id=9) }}">
@@ -40,7 +39,8 @@
         </div>
     </div>
 </div>
-<div class="row">
+
+<div style="width:80%; margin: auto; text-align: center" class="row" style="text-align: center">
     <div class="content-section" style="margin: 10px 10px 10px 10px;">
         <div class="product-image">
             <a href="{{ url_for('book', id=20) }}">
@@ -57,8 +57,6 @@
             </a>
         </div>
     </div>
-
-
     <div class="content-section" style="margin: 10px 10px 10px 10px;">
         <div class="product-image">
             <a href="{{ url_for('book', id=6) }}">
@@ -67,11 +65,9 @@
             </a>
         </div>
     </div>
-    
-
-
 </div>
-<div class="row">
+
+<div style="width:70%; margin: auto; text-align: center" class="row" style="text-align: center">
     <div class="content-section" style="margin: 10px 10px 10px 0px;">
         <div class="product-image">
             <a href="{{ url_for('book', id=19) }}">
@@ -97,4 +93,6 @@
         </div>
     </div>
 </div>
+
+
 {% endblock content %}
