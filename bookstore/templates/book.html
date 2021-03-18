@@ -6,48 +6,47 @@
 
 
 <h1>Book Details</h1>
-<body> 
-    <div class="container" 
-         style="text-align: center;  
-                margin-top: 5em;"> 
+
+<body>
+    <div class="container" style="text-align: center;  
+                margin-top: 5em;">
         <!-- Image to be enlarged and 
             onclick() function call-->
-        <img src= "{{ path + book.image }}" height="500"           
-          onclick="enlargeImg()" 
-             id="img1" /> 
-            <p>Click on image to zoom</p>
-        <br /> 
-        <br /> 
-        <br /> 
+        <img src="{{ path + book.image }}" height="500" onclick="enlargeImg()" id="img1" />
+        <p>Click on image to zoom</p>
+        <br />
+        <br />
+        <br />
         <br>
         <br>
         <!-- Button to reset the Image size -->
         <button onclick="resetImg()">Reset Zoom
-      </button> 
-    </div> 
+        </button>
+    </div>
 
     <!-- script to set display property -->
-    <script> 
-        img = document.getElementById("img1"); 
+    <script>
+        img = document.getElementById("img1");
         // Function to set image dimensions 
-        function enlargeImg() { 
+        function enlargeImg() {
             //img.style.width = "80%"; 
             //img.style.height = "auto"; 
-            img.style.transform = "scale(1.35)"; 
-            img.style.transition = "width 0.5s ease"; 
-        } 
+            img.style.transform = "scale(1.35)";
+            img.style.transition = "width 0.5s ease";
+        }
         // Function to reset image dimensions 
-        function resetImg() { 
+        function resetImg() {
             //img.style.width = "40%"; 
             //img.style.height = "auto"; 
-            img.style.transform = "scale(1.0)"; 
-            img.style.transition = "width 0.5s ease"; 
-        } 
-    </script> 
-</body> 
+            img.style.transform = "scale(1.0)";
+            img.style.transition = "width 0.5s ease";
+        }
+    </script>
+</body>
 <hr>
 <h2>{{book.title}} </h2>
-<a href="{{ url_for('book_author', author=book.author) }}" style="color:blue;font-size:18px;">  Author: {{ book.author }}  </a>
+<a href="{{ url_for('book_author', author=book.author) }}" style="color:blue;font-size:18px;"> Author: {{ book.author }}
+</a>
 <br><br>
 <h4>Price: ${{book.price}}</h4>
 <br>
