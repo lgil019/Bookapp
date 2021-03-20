@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+<h2>Books by Genre:</h2>
+<div>
+
+    <div class="row">
+        <form action="{{ url_for('genres', genre='All') }}" method="POST" style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">All</button>
+        </form>
+
+        <form action="{{ url_for('genres', genre='Family') }}" method="POST" style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">Family</button>
+        </form>
+
+
+        <form action="{{ url_for('genres', genre='Tragedy') }}" method="POST" method="POST"
+            style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">Tragedy</button>
+        </form>
+
+        <form action="{{ url_for('genres', genre='Adventure') }}" method="POST" style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">Adventure</button>
+        </form>
+
+        <form action="{{ url_for('genres', genre='Fiction') }}" method="POST" style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">Fiction</button>
+        </form>
+
+        <form action="{{ url_for('genres', genre='Science Fiction') }}" method="POST"
+            style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">Science Fiction</button>
+        </form>
+
+        <form action="{{ url_for('genres', genre='Historical Fiction') }}" method="POST"
+            style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">Historical Fiction</button>
+        </form>
+
+        <form action="{{ url_for('genres', genre='Southern Gothic') }}" method="POST"
+            style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">Southern Gothic</button>
+        </form>
+
+        <form action="{{ url_for('genres', genre='Self-discovery') }}" method="POST"
+            style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">Self Discovery</button>
+        </form>
+
+        <form action="{{ url_for('genres', genre='Human nature') }}" method="POST" style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">Human Nature</button>
+        </form>
+
+        <form action="{{ url_for('genres', genre='Mystery') }}" method="POST" style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">Mystery</button>
+        </form>
+
+        <form action="{{ url_for('genres', genre='Political Satire') }}" method="POST"
+            style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">Political Satire</button>
+        </form>
+
+        <form action="{{ url_for('genres', genre='Instapoetry') }}" method="POST" style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">Instapoetry</button>
+        </form>
+
+        <form action="{{ url_for('genres', genre='Novel') }}" method="POST" style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">Novel</button>
+        </form>
+
+        <form action="{{ url_for('genres', genre='Dystopian novel') }}" method="POST"
+            style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">Dystopian Novel</button>
+        </form>
+
+        <form action="{{ url_for('genres', genre='Young Adult') }}" method="POST" style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">Young Adult</button>
+        </form>
+    </div>
+
+</div>
+
+<div class="row" style="text-align: center">
+    {% for book in books %}
+    <div class="content-section" style="margin: 10px 10px 10px 10px;">
+        <div class="product-image">
+            <a href="{{ url_for('book', id=book.id) }}">
+                <img src="{{ path + book.image}}" height='250' style="margin: 10px 10px 10px 10px;">
+                <p>{{book.title}}</p> <br>
+            </a>
+        </div>
+
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}

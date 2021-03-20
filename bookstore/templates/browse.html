@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "layout_narrow.html" %}
 
 
 {% block content %}
@@ -27,13 +27,13 @@
 
         </div>
         <div class="product-info">
-            <a href="{{ url_for('book', id=book.id) }}"> <!--JAVI'S CODE-->
-            <div class="media" >       
-                <img class="book cover" src="{{ path + book.image }}" width='250' />
-            </div> 
-            <h5>{{ book.title }}</h5>
-        </a>
-        <a href="{{ url_for('book', id=book.id) }}">
+            <a href="{{ url_for('book', id=book.id) }}">
+                <div class="media">
+                    <img class="book cover" src="{{ path + book.image }}" width='250' />
+                </div>
+                <h5>{{ book.title }}</h5>
+            </a>
+            <h6>Author: {{ book.author }}</h6>
             <h6>Price: ${{ book.price }}</h6>
             <h6>Rating: {{ book.book_rating }}</h6>
             <h6>Date published: {{ book.date_published }}</h6>
@@ -43,21 +43,25 @@
                 <input type="hidden" name="book_id" value="{{ book.id }}">
                 <button type="submit" class="btn btn-outline-info">Add to Cart</button>
             </form>
+        {% set bookid = book.id|int %}
+        <form action="{{ url_for('movetosaved', id=bookid) }}" method="POST">
+            <button type="submit" class="btn btn-outline-info">Add to Saved</button>
+         </form>
         </div>
     </div>
     {%endfor%}
 
     {% for page_num in books.iter_pages(left_edge=1, right_edge=1, left_current=5, right_current=5) %}
-      {% if page_num %}
-        {% if books.page == page_num %}
-       <a class="btn btn-info mb-4"href="{{ url_for('browse', page=page_num) }}">{{ page_num }}</a>
-        {% else %}
-        <a class="btn btn-outline-info mb-4"href="{{ url_for('browse', page=page_num) }}">{{ page_num }}</a>
-        {% endif %}
-      {% else %}
-        ...
-      {% endif %}
+    {% if page_num %}
+    {% if books.page == page_num %}
+    <a class="btn btn-info mb-4" href="{{ url_for('browse', page=page_num) }}">{{ page_num }}</a>
+    {% else %}
+    <a class="btn btn-outline-info mb-4" href="{{ url_for('browse', page=page_num) }}">{{ page_num }}</a>
+    {% endif %}
+    {% else %}
+    ...
+    {% endif %}
     {%endfor%}
-    
+
 </div>
 {% endblock content %}

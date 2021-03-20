@@ -2,53 +2,12 @@
 
 
 {% block content %}
-
-
 <div class="content-section">
-    <div class="media">
-        <!--<img class="rounded-circle account-img" src="{{ image_file }}"> -->
-        <div class="media-body">
-            <h2 class="h3">Hello, {{ current_user.username }}</h2>
-            <h2 class="h5">{{ current_user.street }}</h2>
-            <h2 class="h5">{{ current_user.city }}, {{current_user.state}} {{current_user.zip}}</h2>
-            <p class="text-secondary">{{ current_user.email }}</p>
-        </div>
-    </div>
-
- 
-
     <form method="POST" action="">
         {{ form.hidden_tag() }}
         <fieldset class="form-group">
-            <legend class="border-bottom mb-4">Update Account Info and Home Address</legend>
-            <div class="form-group">
-                {{ form.username.label(class="form-control-label") }}
+            <legend class="border-bottom mb-4">Add Shipping Addresses:</legend>
 
-                {% if form.username.errors %}
-                {{ form.username(class="form-control form-control-md is-invalid") }}
-                <div class="invalid-feedback">
-                    {% for error in form.username.errors %}
-                    <span>{{ error }}</span>
-                    {% endfor %}
-                </div>
-                {% else %}
-                {{ form.username(class="form-control form-control-md") }}
-                {% endif %}
-            </div>
-            <div class="form-group">
-                {{ form.email.label(class="form-control-label") }}
-
-                {% if form.email.errors %}
-                {{ form.email(class="form-control form-control-md is-invalid") }}
-                <div class="invalid-feedback">
-                    {% for error in form.email.errors %}
-                    <span>{{ error }}</span>
-                    {% endfor %}
-                </div>
-                {% else %}
-                {{ form.email(class="form-control form-control-md") }}
-                {% endif %}
-            </div>
             <div class="form-group">
                 {{ form.street.label(class="form-control-label") }}
 
@@ -107,22 +66,19 @@
             {{ form.submit(class="btn btn-outline-info") }}
         </div>
     </form>
-    <a href="{{url_for('change_password')}}">Change Password</a>
 </div>
 
-<div class="col-md-14">
-    <div class="content-section">
-      <h3>Addresses and Payments</h3>
-      <p class='text-muted'>Add/Edit Shipping Addresses and Payment Methods.
-        <ul class="list-group">
-          <a class="nav-item nav-link" href="/shipping">Add/Edit Shipping Addresses</a>            
-          <a class="nav-item nav-link" href="/payments">Add/Edit Payments</a>
-        </ul>
-      </p>
+<div class="content-section">
+    <h4 class="h4">Shipping Addresses</h4>
+    <br>
+    {% for entry in shipping %}
+    <div>
+        <h5 class="h5">{{ entry.street }}</h5>
+        <h2 class="h5">{{ entry.city }}, {{entry.state}} {{entry.zip}}</h2>
+        <a href="{{url_for('removeshipping', shipping_id=entry.id)}}">Remove</a> <br>
+        <br>
+        {% endfor %}
     </div>
-  </div>
+</div>
 
-  
 {% endblock content %}
-
-

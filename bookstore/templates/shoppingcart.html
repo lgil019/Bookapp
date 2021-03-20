@@ -4,31 +4,35 @@
 <h2>Shopping Cart</h2>
 
 <div class="container">
-    
+
 
     <div id="tableItems">
-        
+
         <div>
-        {% if 'Shoppingcart' in session: %}
+            {% if 'Shoppingcart' in session %}
             {% for key , product in session['Shoppingcart'].items() %}
 
             <hr id="seperator">
-                
-                {% set newTotal = "%0.2f" |format(product.quantity|int * product.price|float) %}
-                <h5>Title: {{ product.title }}</h5>
-                <h6>Author: {{ product.author }}</h6>
-                <h6>Unit Price: ${{ product.price }}</h6>
-                <h6>Total Price: ${{ newTotal }} </h6>
-                <form action = "{{url_for('updatecart', id=key)}}" method="post">
+
+            {% set newTotal = "%0.2f" |format(product.quantity|int * product.price|float) %}
+            <h5>Title: {{ product.title }}</h5>
+            <h6>Author: {{ product.author }}</h6>
+            <h6>Unit Price: ${{ product.price }}</h6>
+            <h6>Total Price: ${{ newTotal }} </h6>
+            <form action="{{url_for('updatecart', id=key)}}" method="post">
                 <h7>Quantity: </h7>
                 <input type="number" name="quantity" id="" value={{product.quantity}} min="1" max="99">
                 <button type="submit" class="btn btn-outline-info">Update</button>
-                </form>
-                In stock<br>
-                <a href="{{url_for('removecart', id=key)}}">Remove</a> <br>
-                <a href="{{url_for('movetosaved', id=key)}}">Move to Saved Books</a> <br>
+            </form>
+            In stock<br>
+            <form method="POST">
+                <button formaction="{{url_for('movetosaved', id=key)}}" type="submit" class="btn btn-outline-info">Add
+                    to Saved</button>
+            </form>
+            <a href="{{url_for('removecart', id=key)}}">Remove</a> <br>
+
             {% endfor %}
-        {% endif %}
+            {% endif %}
         </div>
         <hr id="seperator">
         <div id="total">
@@ -39,30 +43,29 @@
         <br><br>
 
 
-    <h1>Saved Books</h1>
-    <div>
-        {% if (session['Savebook']|length) > 0 %}
+        <h2>Saved Books</h2>
+
+        <div>
+            {% if 'Savebook' in session: %}
             {% for key , product in session['Savebook'].items() %}
 
             <hr id="seperator">
-                
-                {% set newTotal = "%0.2f" |format(product.quantity|int * product.price|float) %}
-                <h5>Title: {{ product.title }}</h5>
-                <h6>Author: {{ product.author }}</h6>
-                <h6>Unit Price: ${{ product.price }}</h6>
-                <h6>Total Price: ${{ newTotal }} </h6>
-                <form action = "{{url_for('updatecart', id=key)}}" method="post">
-                <h7>Quantity: </h7>
-                <input type="number" name="quantity" id="" value={{product.quantity}} min="1" max="99">
-                <button type="submit" class="btn btn-outline-info">Update</button>
-                </form>
-                In stock<br>
-                <a href="{{url_for('removesaved', id=key)}}">Remove</a> <br>
-            {% endfor %}
-        {% endif %}
 
+            <h5>{{ product.title }}</h5>
+            <h6>Author: {{ product.author }}</h6>
+            <h6>Unit Price: ${{ product.price }}</h6>
+            <form action="{{ url_for('addcart') }}" method="POST">
+                <label for=""> Quantity:</label>
+                <input type="number" name="quantity" id="" value="1" min="1" max="99">
+                <input type="hidden" name="book_id" value="{{ key }}">
+                <button type="submit" class="btn btn-outline-info">Add to Cart</button>
+            </form>
+            <a href="{{url_for('removesaved', id=key)}}">Remove</a> <br>
+            {% endfor %}
+            {% endif %}
+
+        </div>
     </div>
-</div>
 </div>
 
 

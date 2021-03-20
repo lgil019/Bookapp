@@ -1,8 +1,8 @@
 import bcrypt
 from flask import render_template, url_for, flash, redirect, request, session
 from bookstore import app, db, bcrypt, mail
-from bookstore.forms import RegistrationForm, LoginForm, UpdateAccountForm, SearchForm, RequestResetForm, ResetPasswordForm
-from bookstore.models import User, Book
+from bookstore.forms import AddPaymentMethod, AddShippingAddress, RegistrationForm, LoginForm, UpdateAccountForm, SearchForm, RequestResetForm, ResetPasswordForm
+from bookstore.models import PaymentMethod, ShippingAddress, User, Book
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
@@ -95,9 +95,12 @@ def addcart():
                 session['Shoppingcart'] = merge(session['Shoppingcart'], item)
             else:
                 session['Shoppingcart'] = item
-                return redirect(request.referrer)
+            for key, item in session['Savebook'].items():
+                if int(key) == book.id:
+                    return redirect(url_for('removesaved', id=book.id))
     except Exception as e:
         print(e)
+
     return redirect(request.referrer)
 
 
@@ -105,25 +108,21 @@ def addcart():
 @login_required
 def movetosaved(id):
     try:
-        quantity = 0
-        for key, item in session['Shoppingcart'].items():
-            if int(key) == id:
-                quantity = item['quantity']
-
-        book = Book.query.filter_by(id=id).first()
-        book_id = book.id
-        print(quantity)
-        if quantity:
-            item = {book_id:{'title':book.title, 'author': book.author, 'price': float(book.price), 'quantity':quantity}}
+        book_id = id
+        book = Book.query.filter_by(id=book_id).first()
+        if book_id and request.method == "POST":
+            item = {str(book_id):{'title':book.title, 'author': book.author, 'price': float(book.price), 'quantity':1}}
             if 'Savebook' in session:
+                print(session['Savebook'])
                 session['Savebook'] = merge(session['Savebook'], item)
             else:
                 session['Savebook'] = item
-                #return redirect(request.referrer)
+            for key, item in session['Shoppingcart'].items():
+                if int(key) == id:
+                    return redirect(url_for('removecart', id=id))
     except Exception as e:
         print(e)
-
-    return redirect(url_for('removecart', id=key))
+    return redirect(request.referrer)
 
 
 @app.route("/removesaved/<int:id>")
@@ -159,6 +158,7 @@ def updatecart(id):
             print(e)
             return redirect(url_for('shoppingcart'))
 
+
 @app.route("/removecart/<int:id>")
 @login_required
 def removecart(id):
@@ -189,17 +189,11 @@ def shoppingcart():
         return render_template('shoppingcart.html', title='Shopping Cart', subtotal = subtotal)
 
 
-@app.route("/orders", methods=['GET'])
-def orders():
-    return render_template('orders.html', title='Orders')
-
-
 @app.route('/book/<int:id>', methods=['GET', 'POST'])
 def book(id):
-    #image_file = url_for('static', filename='book_covers/' + Book.image_file)
-    post = Book.query.get_or_404(id)
+    book = Book.query.get_or_404(id)
     path = url_for('static', filename='book_covers/')
-    return render_template('book.html', title = post.title, post=post,path=path)
+    return render_template('book.html', title = book.title, book=book,path=path)
 
 
 @app.route('/author/<string:author>', methods=['GET', 'POST'])
@@ -221,10 +215,34 @@ def browse():
     if form.validate_on_submit():
         selection = form.select.data
         #books = Book.query.order_by(selection)
-        books = Book.query.order_by(selection).paginate(page=page,per_page=5)   #Javi's code
+        books = Book.query.order_by(selection).paginate(page=page,per_page=5)   
         return render_template('browse.html', title='Browse', form=form, books=books, path=path)
 
     return render_template('browse.html', title='Browse', books=books, form=form, path=path)    
+
+@app.route('/genres', methods=['GET', 'POST'])
+def genres():
+    genre = request.args.get('genre')
+    if genre == None or genre == 'All':
+        books = Book.query.all()
+    else:
+        books = Book.query.filter_by(genre=genre)
+    path = url_for('static', filename='book_covers/')
+    print(genre)
+    #if form.validate_on_submit():
+    #    selection = form.select.data
+    #    #books = Book.query.order_by(selection)
+    #    books = Book.query.order_by(selection).paginate(page=page,per_page=5)   
+    #    return render_template('browse.html', title='Browse', form=form, books=books, path=path)
+    return render_template('genres.html', title='Genres', books=books, path=path)   
+
+#@app.route('/genre/<string:genre>', methods=['GET','POST'])
+#def genre(genre):
+#    #genre = request.args.get(genre)
+#    genre = genre
+#    books = Book.query.filter_by(genre=genre).all()
+#    path = url_for('static', filename='book_covers/')
+#    return redirect('genres.html', title='Genres', books=books, path=path) 
     
 
 def send_reset_email(user):
@@ -238,6 +256,7 @@ This Link will expire in 60 minutes.
 If you did not make this request, ignore this email.
 '''
     mail.send(msg)
+
 
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_request():
@@ -280,3 +299,50 @@ def reset_token(token):
         flash('Your password has been updated.', 'success')
         return redirect(url_for('login')) 
     return render_template('reset_token.html', title='Reset Password', form=form)
+
+
+@app.route("/shipping", methods=['GET', 'POST'])
+def shipping():
+    form = AddShippingAddress()
+    user = current_user
+    shipping = ShippingAddress.query.filter_by(user=user)
+    if form.validate_on_submit():
+        address = ShippingAddress(street=form.street.data, city=form.city.data, state=form.state.data, zip=form.zip.data, user=user)
+        db.session.add(address)
+        db.session.commit()
+        return redirect(url_for('shipping'))
+    return render_template('shipping.html', title='Shipping Addresses', form=form, shipping=shipping)
+
+@app.route("/payments", methods=['GET', 'POST'])
+def payments():
+    form = AddPaymentMethod()
+    user = current_user
+    payments = PaymentMethod.query.filter_by(user=user)
+    if form.validate_on_submit():
+        payment = PaymentMethod(name=form.name.data, card=form.card.data, exp_month=form.expiration_month.data, exp_year=form.expiration_year.data, csv=form.csv.data, user=user)
+        db.session.add(payment)
+        db.session.commit()
+        return redirect(url_for('payments'))
+    return render_template('payments.html', title='Payment Details', form=form, payments=payments)
+
+
+@app.route("/shipping/<int:shipping_id>/remove", methods=['GET','POST'])
+@login_required
+def removeshipping(shipping_id):
+    address = ShippingAddress.query.get_or_404(shipping_id)
+    #if address.user_id != current_user:
+    #    abort(403)
+    db.session.delete(address)
+    db.session.commit()
+    return redirect(url_for('shipping'))
+
+
+@app.route("/payment/<int:payment_id>/remove", methods=['GET','POST'])
+@login_required
+def removepayment(payment_id):
+    payment = PaymentMethod.query.get_or_404(payment_id)
+    #if address.user_id != current_user:
+    #    abort(403)
+    db.session.delete(payment)
+    db.session.commit()
+    return redirect(url_for('payments'))
