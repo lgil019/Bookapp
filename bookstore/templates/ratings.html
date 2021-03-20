@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+<h2>Books by Rating:</h2>
+<div>
+
+    <div class="row">
+        <form action="{{ url_for('ratings', rating='1') }}" method="POST" style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">1 Star</button>
+        </form>
+
+        <form action="{{ url_for('ratings', rating='2') }}" method="POST" style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">2 Stars</button>
+        </form>
+
+
+        <form action="{{ url_for('ratings', rating='3') }}" method="POST" method="POST"
+            style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">3 Stars</button>
+        </form>
+
+        <form action="{{ url_for('ratings', rating='4') }}" method="POST" style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">4 Stars</button>
+        </form>
+
+        <form action="{{ url_for('ratings', rating='5') }}" method="POST" style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">5 Stars</button>
+        </form>
+
+       
+    </div>
+
+</div>
+
+<div class="row" style="text-align: center">
+    {% for book in books %}
+    <div class="content-section" style="margin: 10px 10px 10px 10px;">
+        <div class="product-image">
+            <a href="{{ url_for('book', id=book.id) }}">
+                <img src="{{ path + book.image}}" height='250' style="margin: 10px 10px 10px 10px;">
+                <p>{{book.title}}</p> 
+            </a>
+            {%if book.book_rating == 1 %}
+                Rating: {{book.book_rating}} Star
+            {% else %}
+                Rating: {{book.book_rating}} Stars
+            {% endif %}
+        </div>
+
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}
