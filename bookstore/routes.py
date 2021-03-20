@@ -5,6 +5,7 @@ from bookstore.forms import AddPaymentMethod, AddShippingAddress, RegistrationFo
 from bookstore.models import PaymentMethod, ShippingAddress, User, Book, Reviews, Author
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
+from sqlalchemy import desc
 
 
 def merge(cart, item):
@@ -188,39 +189,47 @@ def shoppingcart():
             subtotal += total
         return render_template('shoppingcart.html', title='Shopping Cart', subtotal = subtotal)
 
-#Old working book route
-#@app.route('/book/<int:id>', methods=['GET', 'POST'])
-#def book(id):
-#    book = Book.query.get_or_404(id)
-#    path = url_for('static', filename='book_covers/')
-#    return render_template('book.html', title = book.title, book=book,path=path)
 
 @app.route('/book/<int:id>', methods=['GET', 'POST'])
 def book(id):
     book = Book.query.get_or_404(id)
-    #print(book)
     path = url_for('static', filename='book_covers/')
     reviews = Reviews.query.filter_by(book_id=book.id)
-    
+
     if request.method == 'POST':
+        #Must be logged in to Post Reviews
+        if not current_user.is_authenticated:
+            flash('Please login to comment!', 'danger')
+            return redirect(url_for('login')) 
+
         message = request.form.get('message')
-        review = Reviews(review=message,user_id=current_user.id, book_id=book.id)
-        db.session.add(review)
-        #book.reviews += 1
-        db.session.commit()
-        flash('Your review has has been submited!', 'success')
-        return redirect(request.url)
+        rating = request.form.get('rate')
+        checked = 'check' in request.form #is anonymous posting
+        
+        #There is a review
+        if message is not None:
+            if checked:
+                review = Reviews(review=message,user_id=-1, book_id=book.id)
+            else:
+                review = Reviews(review=message,user_id=current_user.id, book_id=book.id)
+            db.session.add(review)
+            db.session.commit()
+            flash('Your review has has been submited!', 'success')
+            return redirect(request.url)
 
-    return render_template('book.html', title = Book.title, book=book, path=path, reviews=reviews)
+        #There is a rating
+        if rating is not None:
+            numRatings = book.numRatings
+            sumRatings = book.sumRatings
+            numRatings+=1
+            sumRatings+=int(rating)
+            book.numRatings = numRatings
+            book.sumRatings = sumRatings
+            book.book_rating = sumRatings / numRatings
+            db.session.commit()
 
+    return render_template('book.html', title = book.title, book=book, path=path, reviews=reviews, User=User)
 
-
-#@app.route('/author/<string:author>', methods=['GET', 'POST'])
-#def book_author(author):
-#    page = request.args.get('page', 1, type=int)
-#    author = Book.query.filter_by(author=author).first_or_404()
-#    books = Book.query.filter_by(author=author).paginate(page=page,per_page=5)
-#    return render_template('author.html', title=Book.author, author=author, books=books)
 
 @app.route('/author/<string:author>', methods=['GET', 'POST'])
 def book_author(author):
@@ -258,6 +267,18 @@ def genres():
         books = Book.query.filter_by(genre=genre)
     path = url_for('static', filename='book_covers/')
     return render_template('genres.html', title='Genres', books=books, path=path)   
+
+@app.route('/ratings', methods=['GET', 'POST'])
+def ratings():
+    rating = request.args.get('rating', type=int)
+    book_rating = Book.book_rating
+    if rating == None:
+        books = Book.query.order_by(desc(book_rating))
+    else:
+        books = Book.query.filter(book_rating >= rating)
+        books = books.order_by(desc(book_rating))
+    path = url_for('static', filename='book_covers/')
+    return render_template('ratings.html', title='Ratings', books=books, path=path)  
 
 
 def send_reset_email(user):

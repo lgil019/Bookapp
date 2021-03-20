@@ -35,7 +35,7 @@
             </a>
             <h6>Author: {{ book.author }}</h6>
             <h6>Price: ${{ book.price }}</h6>
-            <h6>Rating: {{ book.book_rating }}</h6>
+            <h6>Rating: {{ book.book_rating }} ★</h6>
             <h6>Date published: {{ book.date_published }}</h6>
             <form action="{{ url_for('addcart') }}" method="POST">
                 <label for=""> Quantity:</label>
