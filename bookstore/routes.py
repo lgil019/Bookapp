@@ -2,7 +2,7 @@ import bcrypt
 from flask import render_template, url_for, flash, redirect, request, session
 from bookstore import app, db, bcrypt, mail
 from bookstore.forms import AddPaymentMethod, AddShippingAddress, RegistrationForm, LoginForm, UpdateAccountForm, SearchForm, RequestResetForm, ResetPasswordForm
-from bookstore.models import PaymentMethod, ShippingAddress, User, Book
+from bookstore.models import PaymentMethod, ShippingAddress, User, Book, Reviews, Author
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
@@ -188,20 +188,49 @@ def shoppingcart():
             subtotal += total
         return render_template('shoppingcart.html', title='Shopping Cart', subtotal = subtotal)
 
+#Old working book route
+#@app.route('/book/<int:id>', methods=['GET', 'POST'])
+#def book(id):
+#    book = Book.query.get_or_404(id)
+#    path = url_for('static', filename='book_covers/')
+#    return render_template('book.html', title = book.title, book=book,path=path)
 
 @app.route('/book/<int:id>', methods=['GET', 'POST'])
 def book(id):
     book = Book.query.get_or_404(id)
+    #print(book)
     path = url_for('static', filename='book_covers/')
-    return render_template('book.html', title = book.title, book=book,path=path)
+    reviews = Reviews.query.filter_by(book_id=book.id)
+    
+    if request.method == 'POST':
+        message = request.form.get('message')
+        review = Reviews(review=message,user_id=current_user.id, book_id=book.id)
+        db.session.add(review)
+        #book.reviews += 1
+        db.session.commit()
+        flash('Your review has has been submited!', 'success')
+        return redirect(request.url)
 
+    return render_template('book.html', title = Book.title, book=book, path=path, reviews=reviews)
+
+
+
+#@app.route('/author/<string:author>', methods=['GET', 'POST'])
+#def book_author(author):
+#    page = request.args.get('page', 1, type=int)
+#    author = Book.query.filter_by(author=author).first_or_404()
+#    books = Book.query.filter_by(author=author).paginate(page=page,per_page=5)
+#    return render_template('author.html', title=Book.author, author=author, books=books)
 
 @app.route('/author/<string:author>', methods=['GET', 'POST'])
 def book_author(author):
-    page = request.args.get('page', 1, type=int)
-    author = Book.query.filter_by(author=author).first_or_404()
-    books = Book.query.filter_by(author=author).paginate(page=page,per_page=5)
-    return render_template('author.html', title=Book.author, author=author, books=books)
+    page = request.args.get('author')
+    path = url_for('static', filename='book_covers/')
+    books = Book.query.filter_by(author=author)
+    authors = Author.query.filter_by(author_id=author).first()
+    #books = Book.query.filter_by(author=author).paginate(page=page,per_page=5)
+    #return render_template('author.html', title=Book.author, author=author, books=books)
+    return render_template('author.html', title=author ,books=books, author=author, path=path, authors=authors)
 
 
 @app.route('/browse', methods=['GET', 'POST'])
@@ -228,22 +257,8 @@ def genres():
     else:
         books = Book.query.filter_by(genre=genre)
     path = url_for('static', filename='book_covers/')
-    print(genre)
-    #if form.validate_on_submit():
-    #    selection = form.select.data
-    #    #books = Book.query.order_by(selection)
-    #    books = Book.query.order_by(selection).paginate(page=page,per_page=5)   
-    #    return render_template('browse.html', title='Browse', form=form, books=books, path=path)
     return render_template('genres.html', title='Genres', books=books, path=path)   
 
-#@app.route('/genre/<string:genre>', methods=['GET','POST'])
-#def genre(genre):
-#    #genre = request.args.get(genre)
-#    genre = genre
-#    books = Book.query.filter_by(genre=genre).all()
-#    path = url_for('static', filename='book_covers/')
-#    return redirect('genres.html', title='Genres', books=books, path=path) 
-    
 
 def send_reset_email(user):
     token = user.get_reset_token()

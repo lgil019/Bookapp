@@ -61,4 +61,31 @@
 <hr>
 
 
+<!--  LUIS CODE  -->
+<div class="reviews-form">
+
+    <h4>Submit a Review and Rating:</h4>
+    <h5> {{ current_user.username }}</h5>
+    
+      <form method="POST">
+        <div class="form-group form-inline">		
+        </div>
+
+        <div class="form-group">
+          <textarea name="message" class="form-control mb-10" rows="5" name="message" placeholder="Message" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Message'" required=""></textarea>
+      </div>
+      <button type="submit" class="btn btn-outline-info">Post Review</button> 
+    
+    </form>
+    
+    <hr>
+    
+    </div>
+
+
+<h5>Reviews and Ratings</h5>
+{% for review in reviews %}
+    <p>{{ review.review }} </p>
+{% endfor %}
+
 {% endblock %}
