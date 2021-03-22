@@ -64,12 +64,11 @@
 
 
 
+{% if current_user.is_authenticated %}
 <div class="reviews-form">
 
     <h4>Submit a Review and Rating:</h4>
-    <h5> {{ current_user.username }}: </h5>
 
-    
     <form method="POST">
     <div class="rate">
         <input type="radio" id="star5" name="rate" value="5" />
@@ -87,7 +86,7 @@
         <input type="radio" id="star1" name="rate" value="1" />
         <label for="star1" title="text">1 stars</label>
       </div>
-      <button type="submit" class="btn btn-outline-info">Rate it!</button>
+      <button type="submit" class="btn btn-outline-info">Rate it! </button>
     </form>
 
 
@@ -103,13 +102,10 @@
                 onfocus="this.placeholder = ''" onblur="this.placeholder = 'Message'" required=""></textarea>
         </div>
         <button type="submit" class="btn btn-outline-info">Post Review</button>
-
     </form>
-
     <hr>
-
 </div>
-
+{% endif %}
 
 <h5>Reviews and Ratings</h5>
 <hr>
@@ -138,7 +134,9 @@
 }
 .rate:not(:checked) > input {
     position:absolute;
-    top:-9999px;
+    /*top:-9999px;*/ 
+    left:-9999px
+    /*bottom:0px; */
 }
 .rate:not(:checked) > label {
     float:right;
