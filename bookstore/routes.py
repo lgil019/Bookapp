@@ -199,7 +199,7 @@ def book(id):
     if request.method == 'POST':
         #Must be logged in to Post Reviews
         if not current_user.is_authenticated:
-            flash('Please login to comment!', 'danger')
+            flash('Please login to comment or rate!', 'danger')
             return redirect(url_for('login')) 
 
         message = request.form.get('message')
