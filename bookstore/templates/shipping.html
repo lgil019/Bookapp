@@ -9,6 +9,20 @@
             <legend class="border-bottom mb-4">Add Shipping Addresses:</legend>
 
             <div class="form-group">
+                {{ form.name.label(class="form-control-label") }}
+
+                {% if form.name.errors %}
+                {{ form.name(class="form-control form-control-md is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.name.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.name(class="form-control form-control-md") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
                 {{ form.street.label(class="form-control-label") }}
 
                 {% if form.street.errors %}
@@ -73,6 +87,7 @@
     <br>
     {% for entry in shipping %}
     <div>
+        <h5 class="h5">{{ entry.name }}</h5>
         <h5 class="h5">{{ entry.street }}</h5>
         <h2 class="h5">{{ entry.city }}, {{entry.state}} {{entry.zip}}</h2>
         <a href="{{url_for('removeshipping', shipping_id=entry.id)}}">Remove</a> <br>

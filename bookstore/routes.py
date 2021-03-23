@@ -1,8 +1,9 @@
 import bcrypt
 from flask import render_template, url_for, flash, redirect, request, session
+from sqlalchemy.sql.expression import false
 from bookstore import app, db, bcrypt, mail
 from bookstore.forms import AddPaymentMethod, AddShippingAddress, RegistrationForm, LoginForm, UpdateAccountForm, SearchForm, RequestResetForm, ResetPasswordForm
-from bookstore.models import PaymentMethod, ShippingAddress, User, Book, Reviews, Author
+from bookstore.models import PaymentMethod, Purchases, ShippingAddress, User, Book, Reviews, Author
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 from sqlalchemy import desc
@@ -187,6 +188,17 @@ def shoppingcart():
         for key, product in session['Shoppingcart'].items():
             total = float(product['price']) * int(product['quantity'])
             subtotal += total
+        if request.method == 'POST':
+            
+            for key, product in session['Shoppingcart'].items():
+                purchase = Purchases(book_id=key, user_id=current_user.id)
+                db.session.add(purchase)
+            db.session.commit()
+            session['Shoppingcart'].clear()
+            subtotal = 0
+            flash('Order Placed!', 'success')
+            return redirect(url_for('home')) 
+
         return render_template('shoppingcart.html', title='Shopping Cart', subtotal = subtotal)
 
 
@@ -195,12 +207,27 @@ def book(id):
     book = Book.query.get_or_404(id)
     path = url_for('static', filename='book_covers/')
     reviews = Reviews.query.filter_by(book_id=book.id)
-
+    purchased = Purchases.query.filter_by(user_id=current_user.id).all()
+    #print(id)
+    #print(current_user.id)
+    
     if request.method == 'POST':
         #Must be logged in to Post Reviews
         if not current_user.is_authenticated:
             flash('Please login to comment or rate!', 'danger')
             return redirect(url_for('login')) 
+        
+        #if id not in purchased:
+        #    flash('Must purchase book to comment or rate!', 'danger')
+        #    return redirect(request.referrer) 
+        found = False
+        for item in purchased:
+            print(item.book_id)
+            if item.book_id == id:
+                found = True
+        if not found:
+            flash('Must purchase book to comment or rate!', 'danger')
+            return redirect(request.referrer) 
 
         message = request.form.get('message')
         rating = request.form.get('rate')
@@ -215,7 +242,7 @@ def book(id):
             db.session.add(review)
             db.session.commit()
             flash('Your review has has been submited!', 'success')
-            return redirect(request.url)
+            return redirect(request.referrer)
 
         #There is a rating
         if rating is not None:
@@ -343,7 +370,7 @@ def shipping():
     user = current_user
     shipping = ShippingAddress.query.filter_by(user=user)
     if form.validate_on_submit():
-        address = ShippingAddress(street=form.street.data, city=form.city.data, state=form.state.data, zip=form.zip.data, user=user)
+        address = ShippingAddress(name=form.name.data,street=form.street.data, city=form.city.data, state=form.state.data, zip=form.zip.data, user=user)
         db.session.add(address)
         db.session.commit()
         return redirect(url_for('shipping'))

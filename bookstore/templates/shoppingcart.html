@@ -40,9 +40,13 @@
             <br>
         </div>
         <hr id="seperator">
-        <br><br>
+        
 
+        <form method="POST">
+            <button formaction="{{url_for('shoppingcart')}}" type="Checkout" class="btn btn-outline-info">Checkout</button>
+        </form>
 
+        <hr>
         <h2>Saved Books</h2>
 
         <div>
