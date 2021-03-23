@@ -84,8 +84,9 @@ class ResetPasswordForm(FlaskForm):
 
 
 class AddShippingAddress(FlaskForm):
-    street = StringField('Street Adress')
-    city = StringField('City')
+    name = StringField('Name', validators=[DataRequired()])
+    street = StringField('Street Adress', validators=[DataRequired()])
+    city = StringField('City', validators=[DataRequired()])
     zip = IntegerField('Zip', validators=[NumberRange(min=10000, max=99999)])
     state = StringField('State',validators=[Length(min=2, max=2), Regexp('[a-zA-Z][a-zA-Z]')])
     submit = SubmitField('Add Shipping Address')

@@ -70,6 +70,7 @@ class Book(db.Model):
 class ShippingAddress(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    name = db.Column(db.String(30))
     street = db.Column(db.String(60))
     city = db.Column(db.String(30))
     state = db.Column(db.String(2))
