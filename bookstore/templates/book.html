@@ -60,7 +60,7 @@
 <h5>Rating: {{book.book_rating}} ★ </h5>
 {% endif %}
 <br>
-{% if current_user.is_authenticated and found == False%}
+{% if current_user.is_authenticated and isPurchased == False%}
 <p>* Purchase This Book to Submit a Review and Rating!</p>
 {% endif %}
 <br>
@@ -68,7 +68,7 @@
 
 
 
-{% if current_user.is_authenticated and found == True%}
+{% if current_user.is_authenticated and isPurchased == True%}
 
 <div class="reviews-form">
 
