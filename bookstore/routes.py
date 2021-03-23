@@ -208,8 +208,6 @@ def book(id):
     path = url_for('static', filename='book_covers/')
     reviews = Reviews.query.filter_by(book_id=book.id)
     purchased = Purchases.query.filter_by(user_id=current_user.id).all()
-    #print(id)
-    #print(current_user.id)
     
     if request.method == 'POST':
         #Must be logged in to Post Reviews
@@ -222,7 +220,6 @@ def book(id):
         #    return redirect(request.referrer) 
         found = False
         for item in purchased:
-            print(item.book_id)
             if item.book_id == id:
                 found = True
         if not found:
@@ -254,6 +251,8 @@ def book(id):
             book.sumRatings = sumRatings
             book.book_rating = sumRatings / numRatings
             db.session.commit()
+            flash('Your rating has has been submited!', 'success')
+            return redirect(request.referrer)
 
     return render_template('book.html', title = book.title, book=book, path=path, reviews=reviews, User=User)
 
