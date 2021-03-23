@@ -207,13 +207,13 @@ def book(id):
     book = Book.query.get_or_404(id)
     path = url_for('static', filename='book_covers/')
     reviews = Reviews.query.filter_by(book_id=book.id)
-    
-    found = False
+
+    isPurchased = False
     if current_user.is_authenticated:
         purchased = Purchases.query.filter_by(user_id=current_user.id).all()
         for item in purchased:
             if item.book_id == id:
-                found = True
+                isPurchased = True
     
     if request.method == 'POST':
         #Must be logged in to Post Reviews
@@ -257,7 +257,7 @@ def book(id):
             flash('Your rating has has been submited!', 'success')
             return redirect(request.referrer)
 
-    return render_template('book.html', title = book.title, book=book, path=path, reviews=reviews, User=User, found=found)
+    return render_template('book.html', title = book.title, book=book, path=path, reviews=reviews, User=User, isPurchased=isPurchased)
 
 
 @app.route('/author/<string:author>', methods=['GET', 'POST'])
