@@ -12,10 +12,10 @@
 
 <div class="row" style="text-align: center">
 {%for book in books%}
-
+<div class="content-section" style="margin: 10px 10px 10px 10px;">
 <div>
     <div class="media">
-        <img class="book cover" src="{{ path + book.image }}" height='300' style="margin: 10px 30px 10px 20px;" />
+        <img class="book cover" src="{{ path + book.image }}" height='300' style="margin: 20px 20px 10px 20px;" />
     </div>
 
     <a href="{{ url_for('book', id=book.id) }}"> {{book.title}}</a>
@@ -26,6 +26,7 @@
     <h6>Date published: {{ book.date_published }}</h6>
     <br><br>
 </div>  
+</div>
     {% endfor %}
 
 </div>

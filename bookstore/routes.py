@@ -207,24 +207,27 @@ def book(id):
     book = Book.query.get_or_404(id)
     path = url_for('static', filename='book_covers/')
     reviews = Reviews.query.filter_by(book_id=book.id)
-    purchased = Purchases.query.filter_by(user_id=current_user.id).all()
     
-    if request.method == 'POST':
-        #Must be logged in to Post Reviews
-        if not current_user.is_authenticated:
-            flash('Please login to comment or rate!', 'danger')
-            return redirect(url_for('login')) 
-        
-        #if id not in purchased:
-        #    flash('Must purchase book to comment or rate!', 'danger')
-        #    return redirect(request.referrer) 
-        found = False
+    found = False
+    if current_user.is_authenticated:
+        purchased = Purchases.query.filter_by(user_id=current_user.id).all()
         for item in purchased:
             if item.book_id == id:
                 found = True
-        if not found:
-            flash('Must purchase book to comment or rate!', 'danger')
-            return redirect(request.referrer) 
+    
+    if request.method == 'POST':
+        #Must be logged in to Post Reviews
+        #if not current_user.is_authenticated:
+        #    flash('Please login to comment or rate!', 'danger')
+        #    return redirect(url_for('login')) 
+        
+        #found = False
+        #for item in purchased:
+        #    if item.book_id == id:
+        #        found = True
+        #if not found:
+        #    flash('Must purchase book to comment or rate!', 'danger')
+        #    return redirect(request.referrer) 
 
         message = request.form.get('message')
         rating = request.form.get('rate')
@@ -254,7 +257,7 @@ def book(id):
             flash('Your rating has has been submited!', 'success')
             return redirect(request.referrer)
 
-    return render_template('book.html', title = book.title, book=book, path=path, reviews=reviews, User=User)
+    return render_template('book.html', title = book.title, book=book, path=path, reviews=reviews, User=User, found=found)
 
 
 @app.route('/author/<string:author>', methods=['GET', 'POST'])
