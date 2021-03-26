@@ -1,4 +1,4 @@
-{% extends "layout_narrow.html" %}
+{% extends "layout.html" %}
 
 
 {% block content %}
@@ -20,22 +20,20 @@
 
 
 <div class="content">
-
+    <div class="row" style="text-align: center;" >
     {%for book in books.items%}
-    <div class="content-section">
-        <div class="product-image">
-
-        </div>
+    <div class="content-section" style="margin: 10px 10px 10px 10px;">
+       
         <div class="product-info">
             <a href="{{ url_for('book', id=book.id) }}">
                 <div class="media">
-                    <img class="book cover" src="{{ path + book.image }}" width='250' />
+                    <img class="book cover" src="{{ path + book.image }}" height='250' style="margin: 20px auto 10px auto;">
                 </div>
                 <h5>{{ book.title }}</h5>
             </a>
             <h6>Author: {{ book.author }}</h6>
             <h6>Price: ${{ book.price }}</h6>
-            <h6>Rating: {{ book.book_rating }}</h6>
+            <h6>Rating: {{ book.book_rating }} ★</h6>
             <h6>Date published: {{ book.date_published }}</h6>
             <form action="{{ url_for('addcart') }}" method="POST">
                 <label for=""> Quantity:</label>
@@ -46,11 +44,13 @@
         {% set bookid = book.id|int %}
         <form action="{{ url_for('movetosaved', id=bookid) }}" method="POST">
             <button type="submit" class="btn btn-outline-info">Add to Saved</button>
+            <br><br>
          </form>
         </div>
     </div>
+    
     {%endfor%}
-
+</div>
     {% for page_num in books.iter_pages(left_edge=1, right_edge=1, left_current=5, right_current=5) %}
     {% if page_num %}
     {% if books.page == page_num %}

@@ -1,10 +1,12 @@
 import bcrypt
 from flask import render_template, url_for, flash, redirect, request, session
+from sqlalchemy.sql.expression import false
 from bookstore import app, db, bcrypt, mail
 from bookstore.forms import AddPaymentMethod, AddShippingAddress, RegistrationForm, LoginForm, UpdateAccountForm, SearchForm, RequestResetForm, ResetPasswordForm
-from bookstore.models import PaymentMethod, ShippingAddress, User, Book
+from bookstore.models import PaymentMethod, Purchases, ShippingAddress, User, Book, Reviews, Author
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
+from sqlalchemy import desc
 
 
 def merge(cart, item):
@@ -186,6 +188,17 @@ def shoppingcart():
         for key, product in session['Shoppingcart'].items():
             total = float(product['price']) * int(product['quantity'])
             subtotal += total
+        if request.method == 'POST':
+            
+            for key, product in session['Shoppingcart'].items():
+                purchase = Purchases(book_id=key, user_id=current_user.id)
+                db.session.add(purchase)
+            db.session.commit()
+            session['Shoppingcart'].clear()
+            subtotal = 0
+            flash('Order Placed!', 'success')
+            return redirect(url_for('home')) 
+
         return render_template('shoppingcart.html', title='Shopping Cart', subtotal = subtotal)
 
 
@@ -193,13 +206,69 @@ def shoppingcart():
 def book(id):
     book = Book.query.get_or_404(id)
     path = url_for('static', filename='book_covers/')
-    return render_template('book.html', title = book.title, book=book,path=path)
+    reviews = Reviews.query.filter_by(book_id=book.id)
+
+    isPurchased = False
+    if current_user.is_authenticated:
+        purchased = Purchases.query.filter_by(user_id=current_user.id).all()
+        for item in purchased:
+            if item.book_id == id:
+                isPurchased = True
+    
+    if request.method == 'POST':
+        #Must be logged in to Post Reviews
+        #if not current_user.is_authenticated:
+        #    flash('Please login to comment or rate!', 'danger')
+        #    return redirect(url_for('login')) 
+        
+        #found = False
+        #for item in purchased:
+        #    if item.book_id == id:
+        #        found = True
+        #if not found:
+        #    flash('Must purchase book to comment or rate!', 'danger')
+        #    return redirect(request.referrer) 
+
+        message = request.form.get('message')
+        rating = request.form.get('rate')
+        checked = 'check' in request.form #is anonymous posting
+        
+        #There is a review
+        if message is not None:
+            if checked:
+                review = Reviews(review=message,user_id=-1, book_id=book.id)
+            else:
+                review = Reviews(review=message,user_id=current_user.id, book_id=book.id)
+            db.session.add(review)
+            db.session.commit()
+            flash('Your review has has been submited!', 'success')
+            return redirect(request.referrer)
+
+        #There is a rating
+        if rating is not None:
+            numRatings = book.numRatings
+            sumRatings = book.sumRatings
+            numRatings+=1
+            sumRatings+=int(rating)
+            book.numRatings = numRatings
+            book.sumRatings = sumRatings
+            book.book_rating = sumRatings / numRatings
+            db.session.commit()
+            flash('Your rating has has been submited!', 'success')
+            return redirect(request.referrer)
+
+    return render_template('book.html', title = book.title, book=book, path=path, reviews=reviews, User=User, isPurchased=isPurchased)
 
 
 @app.route('/author/<string:author>', methods=['GET', 'POST'])
 def book_author(author):
-    author = Book.query.filter_by(author=author)
-    return render_template('author.html', title=author, author=author, books=books)
+    page = request.args.get('author')
+    path = url_for('static', filename='book_covers/')
+    books = Book.query.filter_by(author=author)
+    authors = Author.query.filter_by(author_id=author).first()
+    #books = Book.query.filter_by(author=author).paginate(page=page,per_page=5)
+    #return render_template('author.html', title=Book.author, author=author, books=books)
+    return render_template('author.html', title=author ,books=books, author=author, path=path, authors=authors)
 
 
 @app.route('/browse', methods=['GET', 'POST'])
@@ -226,22 +295,20 @@ def genres():
     else:
         books = Book.query.filter_by(genre=genre)
     path = url_for('static', filename='book_covers/')
-    print(genre)
-    #if form.validate_on_submit():
-    #    selection = form.select.data
-    #    #books = Book.query.order_by(selection)
-    #    books = Book.query.order_by(selection).paginate(page=page,per_page=5)   
-    #    return render_template('browse.html', title='Browse', form=form, books=books, path=path)
     return render_template('genres.html', title='Genres', books=books, path=path)   
 
-#@app.route('/genre/<string:genre>', methods=['GET','POST'])
-#def genre(genre):
-#    #genre = request.args.get(genre)
-#    genre = genre
-#    books = Book.query.filter_by(genre=genre).all()
-#    path = url_for('static', filename='book_covers/')
-#    return redirect('genres.html', title='Genres', books=books, path=path) 
-    
+@app.route('/ratings', methods=['GET', 'POST'])
+def ratings():
+    rating = request.args.get('rating', type=int)
+    book_rating = Book.book_rating
+    if rating == None:
+        books = Book.query.order_by(desc(book_rating))
+    else:
+        books = Book.query.filter(book_rating >= rating)
+        books = books.order_by(desc(book_rating))
+    path = url_for('static', filename='book_covers/')
+    return render_template('ratings.html', title='Ratings', books=books, path=path)  
+
 
 def send_reset_email(user):
     token = user.get_reset_token()
@@ -305,7 +372,7 @@ def shipping():
     user = current_user
     shipping = ShippingAddress.query.filter_by(user=user)
     if form.validate_on_submit():
-        address = ShippingAddress(street=form.street.data, city=form.city.data, state=form.state.data, zip=form.zip.data, user=user)
+        address = ShippingAddress(name=form.name.data,street=form.street.data, city=form.city.data, state=form.state.data, zip=form.zip.data, user=user)
         db.session.add(address)
         db.session.commit()
         return redirect(url_for('shipping'))

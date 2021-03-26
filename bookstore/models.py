@@ -48,7 +48,8 @@ class Book(db.Model):
     title = db.Column(db.String(30), nullable=False)
     author = db.Column(db.String(30), nullable=False)
     genre = db.Column(db.String(30), nullable=False)
-    book_rating = db.Column(db.Integer, nullable=False, default = 'N/A')
+    #book_rating = db.Column(db.Integer, nullable=False, default = 'N/A')
+    book_rating = db.Column(db.Numeric(10,1))
     publisher = db.Column(db.String(30), nullable=False, default = 'N/A')
     summary = db.Column(db.String(), nullable=False, default = 'N/A')
     date_published = db.Column(db.String)
@@ -58,7 +59,7 @@ class Book(db.Model):
     sumRatings = db.Column(db.Integer, default=0)
     purchased = db.relationship('Purchases', backref='book')
     review = db.relationship('Reviews', backref='book')
-    author_page = db.relationship('Author',backref='book')
+    #author_page = db.relationship('Author', backref='book_author')
     
 
 
@@ -69,6 +70,7 @@ class Book(db.Model):
 class ShippingAddress(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    name = db.Column(db.String(30))
     street = db.Column(db.String(60))
     city = db.Column(db.String(30))
     state = db.Column(db.String(2))
@@ -102,8 +104,9 @@ class Reviews(db.Model):
 
 class Author(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    author =  db.Column(db.String, db.ForeignKey('book.author'))
+    author_id = db.Column(db.String)
     bio = db.Column(db.String(500))
+
 
 
 
