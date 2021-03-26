@@ -4,19 +4,9 @@
 {% block content %}
     <h1 class="mb-3">Books by {{ book.author }} ({{ books.total }})</h1>
 
-    {%for book in books.items%}
-    <div class="content-section">
-        <div class="product-image">
-
-        </div>
-        <div class="product-info">
-            <a href = {{ url_for('book', id=book.id) }}>{{ book.title }}</a>
-            <h6>Author: {{ book.author }}</h6>
-            <a href="{{ url_for('book_author', author=book.author) }}"> {{ book.author }}</a>
-            <h6>Price: ${{ book.price }}</h6>
-            <h6>Rating: {{ book.book_rating }}</h6>
-            <h6>Date published: {{ book.date_published }}</h6>
-        </div>
-        {% endfor %}
+    {%for book in books%}
+    
+    
+    {% endfor %}
 
 {% endblock content %}

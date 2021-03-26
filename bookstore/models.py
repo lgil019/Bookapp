@@ -58,6 +58,7 @@ class Book(db.Model):
     sumRatings = db.Column(db.Integer, default=0)
     purchased = db.relationship('Purchases', backref='book')
     review = db.relationship('Reviews', backref='book')
+    author_page = db.relationship('Author',backref='book')
     
 
 
@@ -98,6 +99,11 @@ class Reviews(db.Model):
     review = db.Column(db.String(500))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     book_id = db.Column(db.Integer, db.ForeignKey('book.id'))
+
+class Author(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    author =  db.Column(db.String, db.ForeignKey('book.author'))
+    bio = db.Column(db.String(500))
 
 
 

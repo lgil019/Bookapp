@@ -198,10 +198,8 @@ def book(id):
 
 @app.route('/author/<string:author>', methods=['GET', 'POST'])
 def book_author(author):
-    page = request.args.get('page', 1, type=int)
-    author = Book.query.filter_by(author=author).first_or_404()
-    books = Book.query.filter_by(author=author).paginate(page=page,per_page=5)
-    return render_template('author.html', title=Book.author, author=author, books=books)
+    author = Book.query.filter_by(author=author)
+    return render_template('author.html', title=author, author=author, books=books)
 
 
 @app.route('/browse', methods=['GET', 'POST'])
