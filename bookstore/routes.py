@@ -2,6 +2,7 @@ import bcrypt
 from flask import render_template, url_for, flash, redirect, request, session
 from flask_sqlalchemy import Pagination
 from sqlalchemy.sql.expression import false, text
+from wtforms.validators import EqualTo
 from bookstore import app, db, bcrypt, mail
 from bookstore.forms import AddPaymentMethod, AddShippingAddress, PageForm, RegistrationForm, LoginForm, UpdateAccountForm, SearchForm, RequestResetForm, ResetPasswordForm
 from bookstore.models import PaymentMethod, Purchases, ShippingAddress, User, Book, Reviews, Author
@@ -283,7 +284,11 @@ def browse():
 
     if form.validate_on_submit():
         selection = form.select.data
-        books = Book.query.order_by(selection).paginate(page=page,per_page=10)   
+        print(selection)
+        if selection == 'book_rating':
+            books = Book.query.order_by(desc(selection)).paginate(page=page,per_page=10)  
+        else:
+            books = Book.query.order_by(selection).paginate(page=page,per_page=10)   
         return render_template('browse.html', title='Browse', form=form, pagination=pagination, books=books, path=path)
     
     if pagination.validate_on_submit():
