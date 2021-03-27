@@ -66,6 +66,12 @@ class SearchForm(FlaskForm):
     select = SelectField('Sort By:', choices=choices)
     submit = SubmitField('Search')
 
+class PageForm(FlaskForm):
+    num = [ ('10', '10'),
+            ('20', '20')]
+    select = SelectField('Display:', choices=num)
+    submit = SubmitField('Submit')
+
 
 class RequestResetForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])

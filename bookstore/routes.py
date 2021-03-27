@@ -1,8 +1,9 @@
 import bcrypt
 from flask import render_template, url_for, flash, redirect, request, session
-from sqlalchemy.sql.expression import false
+from flask_sqlalchemy import Pagination
+from sqlalchemy.sql.expression import false, text
 from bookstore import app, db, bcrypt, mail
-from bookstore.forms import AddPaymentMethod, AddShippingAddress, RegistrationForm, LoginForm, UpdateAccountForm, SearchForm, RequestResetForm, ResetPasswordForm
+from bookstore.forms import AddPaymentMethod, AddShippingAddress, PageForm, RegistrationForm, LoginForm, UpdateAccountForm, SearchForm, RequestResetForm, ResetPasswordForm
 from bookstore.models import PaymentMethod, Purchases, ShippingAddress, User, Book, Reviews, Author
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
@@ -275,17 +276,25 @@ def book_author(author):
 def browse():
     page = request.args.get('page', 1, type=int)  #Javi's Code
     form = SearchForm()
-    #books = Book.query.all()   #Old code to display all
-    books = Book.query.paginate(page=page,per_page=5)     #Javi's Code
+    pagination = PageForm()
+    books = Book.query.order_by('id').paginate(page=page,per_page=10)  
+    #books = Book.query.paginate(page=page,per_page=10)     #Javi's Code
     path = url_for('static', filename='book_covers/')
 
     if form.validate_on_submit():
         selection = form.select.data
-        #books = Book.query.order_by(selection)
-        books = Book.query.order_by(selection).paginate(page=page,per_page=5)   
-        return render_template('browse.html', title='Browse', form=form, books=books, path=path)
+        books = Book.query.order_by(selection).paginate(page=page,per_page=10)   
+        return render_template('browse.html', title='Browse', form=form, pagination=pagination, books=books, path=path)
+    
+    if pagination.validate_on_submit():
+        page = 1
+        selection = form.select.data
+        numPerPage = pagination.select.data
+        print(numPerPage)
+        books = Book.query.order_by('id').paginate(page=page,per_page=int(numPerPage))   
+        return render_template('browse.html', title='Browse', form=form, pagination=pagination, books=books, path=path)
 
-    return render_template('browse.html', title='Browse', books=books, form=form, path=path)    
+    return render_template('browse.html', title='Browse', books=books, form=form, pagination=pagination, path=path)    
 
 @app.route('/genres', methods=['GET', 'POST'])
 def genres():
