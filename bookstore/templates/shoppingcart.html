@@ -40,11 +40,55 @@
             <br>
         </div>
         <hr id="seperator">
-        
 
-        <form method="POST">
-            <button formaction="{{url_for('shoppingcart')}}" type="Checkout" class="btn btn-outline-info">Checkout</button>
+
+        {% if subtotal > 0 %}
+        <h5> <b> Checkout: </b></h5>
+        <form method="POST" onSubmit="if(!confirm('Confirm Purchase?')){return false;}">
+            {% if shipping.first() == None %}
+            <br>
+            YOU MUST ENTER SHIPPING ADDRESS TO PURCHASE!
+            <a href="{{ url_for('shipping') }}" style="color:blue;font-size:18px;"> Add Shipping Address </a>
+            <br>
+            {% else %}
+            <fieldset id="group1">
+                <u>Shipping Address:</u>
+
+                {% for address in shipping%}
+                <div class="shipping">
+                    <input type="radio" value="value" name="shipping">
+                    {{address.name}} - {{address.street}}, {{address.city}}, {{address.state}} {{address.zip}}
+                </div>
+                {% endfor %}
+
+            </fieldset>
+            {% endif %}
+            <br>
+
+            {% if payments.first() == None %}
+            YOU MUST ENTER PAYMENT METHOD TO PURCHASE!
+            <a href="{{ url_for('payments') }}" style="color:blue;font-size:18px;"> Add Payments Method </a>
+            <br>
+            {% else %}
+            <fieldset id="group2">
+                <u>Payment Method:</u>
+                {% for payment in payments%}
+                <div class="payment">
+                    <input type="radio" value="value" name="payment">
+                    {{ payment.name }} - **** **** **** {{ payment.card[-4:] }} - Exp: {{ payment.exp_month
+                    }}/{{payment.exp_year}}
+                </div>
+                {% endfor %}
+            </fieldset>
+            {%endif%}
+            <br>
+
+            {% if payments.first() != None and shipping.first != None%}
+            <button formaction="{{url_for('shoppingcart')}}" type="Checkout"
+                class="btn btn-outline-info">Purchase</button>
+            {% endif %}
         </form>
+        {%endif%}
 
         <hr>
         <h2>Saved Books</h2>

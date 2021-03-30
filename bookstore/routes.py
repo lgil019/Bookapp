@@ -95,7 +95,7 @@ def addcart():
         if book_id and quantity and request.method == "POST":
             item = {book_id:{'title':book.title, 'author': book.author, 'price': float(book.price), 'quantity':quantity}}
             if 'Shoppingcart' in session:
-                print(session['Shoppingcart'])
+                #print(session['Shoppingcart'])
                 session['Shoppingcart'] = merge(session['Shoppingcart'], item)
             else:
                 session['Shoppingcart'] = item
@@ -104,7 +104,7 @@ def addcart():
                     return redirect(url_for('removesaved', id=book.id))
     except Exception as e:
         print(e)
-
+    flash('Added to Cart!', 'success')
     return redirect(request.referrer)
 
 
@@ -117,7 +117,7 @@ def movetosaved(id):
         if book_id and request.method == "POST":
             item = {str(book_id):{'title':book.title, 'author': book.author, 'price': float(book.price), 'quantity':1}}
             if 'Savebook' in session:
-                print(session['Savebook'])
+                #print(session['Savebook'])
                 session['Savebook'] = merge(session['Savebook'], item)
             else:
                 session['Savebook'] = item
@@ -139,7 +139,8 @@ def removesaved(id):
         for key, item in session['Savebook'].items():
             if int(key) == id:
                 session['Savebook'].pop(key, None)
-                return redirect(url_for('shoppingcart'))
+                return redirect(request.referrer)   #Justin's route
+                #return redirect(url_for('shoppingcart')) #Olivia's route
     except Exception as e:
         print(e)
         return redirect(url_for('shoppingcart'))
@@ -173,7 +174,8 @@ def removecart(id):
         for key, item in session['Shoppingcart'].items():
             if int(key) == id:
                 session['Shoppingcart'].pop(key, None)
-                return redirect(url_for('shoppingcart'))
+                return redirect(request.referrer)   #Justin's Route
+                #return redirect(url_for('shoppingcart')) #Olivia's route
     except Exception as e:
         print(e)
         return redirect(url_for('shoppingcart'))
@@ -182,6 +184,9 @@ def removecart(id):
 @app.route("/shoppingcart", methods=['GET', 'POST'])
 @login_required
 def shoppingcart():
+    user = current_user
+    shipping = ShippingAddress.query.filter_by(user=user)
+    payments = PaymentMethod.query.filter_by(user=user)
     total = 0
     subtotal = 0
     if 'Shoppingcart' not in session:
@@ -191,7 +196,12 @@ def shoppingcart():
             total = float(product['price']) * int(product['quantity'])
             subtotal += total
         if request.method == 'POST':
-            
+            shipping_option = request.form.getlist('shipping')
+            payment_option = request.form.getlist('payment')
+            if not shipping_option or not payment_option:
+                flash('Must select Shipping Address and Payment Method!', 'danger')
+                return redirect(request.referrer)
+                
             for key, product in session['Shoppingcart'].items():
                 purchase = Purchases(book_id=key, user_id=current_user.id)
                 db.session.add(purchase)
@@ -201,7 +211,7 @@ def shoppingcart():
             flash('Order Placed!', 'success')
             return redirect(url_for('home')) 
 
-        return render_template('shoppingcart.html', title='Shopping Cart', subtotal = subtotal)
+        return render_template('shoppingcart.html', title='Shopping Cart', subtotal=subtotal, shipping=shipping, payments=payments)
 
 
 @app.route('/book/<int:id>', methods=['GET', 'POST'])
