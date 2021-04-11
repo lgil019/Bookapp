@@ -1,0 +1,100 @@
+{% extends "layout_narrow.html" %}
+
+
+{% block content %}
+<div class="content-section">
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Add Payment Method:</legend>
+
+            <div class="form-group">
+                {{ form.name.label(class="form-control-label") }}
+
+                {% if form.name.errors %}
+                {{ form.name(class="form-control form-control-md is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.card.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.name(class="form-control form-control-md") }}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.card.label(class="form-control-label") }}
+
+                {% if form.card.errors %}
+                {{ form.card(class="form-control form-control-md is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.card.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.card(class="form-control form-control-md") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.expiration_month.label(class="form-control-label") }}
+                {% if form.expiration_month.errors %}
+                {{ form.expiration_month(class="form-control form-control-md is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.expiration_month.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.expiration_month(class="form-control form-control-md") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.expiration_year.label(class="form-control-label") }}
+                {% if form.expiration_year.errors %}
+                {{ form.expiration_year(class="form-control form-control-md is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.expiration_year.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.expiration_year(class="form-control form-control-md") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.csv.label(class="form-control-label") }}
+                {% if form.csv.errors %}
+                {{ form.csv(class="form-control form-control-md is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.csv.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.csv(class="form-control form-control-md") }}
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-outline-info") }}
+        </div>
+    </form>
+</div>
+<div class="content-section">
+    <h4 class="h4">Payment Methods</h4>
+    <br>
+    {% for entry in payments %}
+    <div>
+        <h5 class="h5">{{ entry.name }}</h5>
+        <h5 class="h5">**** **** **** {{ entry.card[-4:] }}</h5>
+        <h5 class="h5">{{ entry.exp_month }}/{{entry.exp_year}}</h5>
+        <a href="{{url_for('removepayment', payment_id=entry.id)}}">Remove</a> <br>
+        <br>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock content %}

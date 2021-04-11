@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+
+
+<h2>Books by Genre:</h2>
+<div>
+
+    <div class="row">
+        <form action="{{ url_for('genres', genre='All') }}" method="POST" style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">All</button>
+        </form>
+
+        <form action="{{ url_for('genres', genre='Family') }}" method="POST" style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">Family</button>
+        </form>
+
+        <form action="{{ url_for('genres', genre='Novel') }}" method="POST" style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">Novel</button>
+        </form>
+
+        <form action="{{ url_for('genres', genre='Science Fiction') }}" method="POST" style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">Science Fiction</button>
+        </form>
+
+        <form action="{{ url_for('genres', genre='Drama') }}" method="POST" style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">Drama</button>
+        </form>
+
+        <form action="{{ url_for('genres', genre='Tragedy') }}" method="POST" style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">Tragedy</button>
+        </form>
+
+        <form action="{{ url_for('genres', genre='Poetry') }}" method="POST" style="margin: 10px 10px 10px 10px;">
+            <button type="submit" class="btn btn-outline-info">Poetry</button>
+        </form>
+
+    </div>
+
+</div>
+
+<div class="row" style="text-align: center">
+    {% for book in books %}
+    <div class="content-section" style="margin: 10px 10px 10px 10px;">
+        <div class="product-image">
+            <a href="{{ url_for('book', id=book.id) }}">
+                <img src="{{ path + book.image}}" height='250' style="margin: 10px 10px 10px 10px;">
+                <p>{{book.title}}</p>
+            </a>
+        </div>
+        <h6>{{book.author}}</h6>
+        <h6>Rating: {{book.book_rating}} ★ </h6>
+        <h6>${{book.price}}</h6>
+
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}

@@ -1,0 +1,121 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2>Shopping Cart</h2>
+
+<div class="container">
+
+
+    <div id="tableItems">
+
+        <div>
+            {% if 'Shoppingcart' in session %}
+            {% for key , product in session['Shoppingcart'].items() %}
+
+            <hr id="seperator">
+
+            {% set newTotal = "%0.2f" |format(product.quantity|int * product.price|float) %}
+            <h5>Title: {{ product.title }}</h5>
+            <h6>Author: {{ product.author }}</h6>
+            <h6>Unit Price: ${{ product.price }}</h6>
+            <h6>Total Price: ${{ newTotal }} </h6>
+            <form action="{{url_for('updatecart', id=key)}}" method="post">
+                <h7>Quantity: </h7>
+                <input type="number" name="quantity" id="" value={{product.quantity}} min="1" max="99">
+                <button type="submit" class="btn btn-outline-info">Update</button>
+            </form>
+            In stock<br>
+            <form method="POST">
+                <button formaction="{{url_for('movetosaved', id=key)}}" type="submit" class="btn btn-outline-info">Add
+                    to Saved</button>
+            </form>
+            <a href="{{url_for('removecart', id=key)}}">Remove</a> <br>
+
+            {% endfor %}
+            {% endif %}
+        </div>
+        <hr id="seperator">
+        <div id="total">
+            <span id="subtotal">Subtotal</span> : ${{ "%0.2f" |format(subtotal) }}
+            <br>
+        </div>
+        <hr id="seperator">
+
+
+        {% if subtotal > 0 %}
+        <h5> <b> Checkout: </b></h5>
+        <form method="POST" onSubmit="if(!confirm('Confirm Purchase?')){return false;}">
+            {% if shipping.first() == None %}
+            <br>
+            YOU MUST ENTER SHIPPING ADDRESS TO PURCHASE!
+            <a href="{{ url_for('shipping') }}" style="color:blue;font-size:18px;"> Add Shipping Address </a>
+            <br>
+            {% else %}
+            <fieldset id="group1">
+                <u>Shipping Address:</u>
+
+                {% for address in shipping%}
+                <div class="shipping">
+                    <input type="radio" value="value" name="shipping">
+                    {{address.name}} - {{address.street}}, {{address.city}}, {{address.state}} {{address.zip}}
+                </div>
+                {% endfor %}
+
+            </fieldset>
+            {% endif %}
+            <br>
+
+            {% if payments.first() == None %}
+            YOU MUST ENTER PAYMENT METHOD TO PURCHASE!
+            <a href="{{ url_for('payments') }}" style="color:blue;font-size:18px;"> Add Payments Method </a>
+            <br>
+            {% else %}
+            <fieldset id="group2">
+                <u>Payment Method:</u>
+                {% for payment in payments%}
+                <div class="payment">
+                    <input type="radio" value="value" name="payment">
+                    {{ payment.name }} - **** **** **** {{ payment.card[-4:] }} - Exp: {{ payment.exp_month
+                    }}/{{payment.exp_year}}
+                </div>
+                {% endfor %}
+            </fieldset>
+            {%endif%}
+            <br>
+
+            {% if payments.first() != None and shipping.first != None%}
+            <button formaction="{{url_for('shoppingcart')}}" type="Checkout"
+                class="btn btn-outline-info">Purchase</button>
+            {% endif %}
+        </form>
+        {%endif%}
+
+        <hr>
+        <h2>Saved Books</h2>
+
+        <div>
+            {% if 'Savebook' in session: %}
+            {% for key , product in session['Savebook'].items() %}
+
+            <hr id="seperator">
+
+            <h5>{{ product.title }}</h5>
+            <h6>Author: {{ product.author }}</h6>
+            <h6>Unit Price: ${{ product.price }}</h6>
+            <form action="{{ url_for('addcart') }}" method="POST">
+                <label for=""> Quantity:</label>
+                <input type="number" name="quantity" id="" value="1" min="1" max="99">
+                <input type="hidden" name="book_id" value="{{ key }}">
+                <button type="submit" class="btn btn-outline-info">Add to Cart</button>
+            </form>
+            <a href="{{url_for('removesaved', id=key)}}">Remove</a> <br>
+            {% endfor %}
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock content %}
